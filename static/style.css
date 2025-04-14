@@ -1,0 +1,32 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+h1, h2 {
+    color: #007bff;
+}
+
+nav a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+form input {
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 250px;
+}
+
+form button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
