@@ -5,15 +5,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h2>Place a Laundry Order</h2>
     <nav>
         <a href="/">Home</a>
         <a href="/services">Services</a>
-        <a href="/about">About Us</a>
-        <a href="/contact">Contact Us</a>
         <a href="/order">Place Order</a>
+        <a href="/about">About Us</a>
         <a href="/admin">Admin</a>
+        <a href="/contact">Contact Us</a>
     </nav>
+    <h2>Place a Laundry Order</h2>
 
     {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -24,13 +24,18 @@
     <form method="POST">
         <input type="text" name="name" placeholder="Your Full Name" required>
         <input type="text" name="phone" placeholder="Phone Number" required>
+        <input type="text" name="address" placeholder="Your Address" required>
 
         <label>Choose a Service:</label>
         <select name="service" required>
             <option value="">-- Select --</option>
-            <option value="Washing & Folding">Washing & Folding</option>
-            <option value="Ironing Only">Ironing Only</option>
+            <option value="Washing & Drying">Washing & Drying</option>
+            <option value="Ironing/Pressing">Ironing/Pressing</option>
+            <option value="Folding and Packaging">Folding and Packaging</option>
             <option value="Dry Cleaning">Dry Cleaning</option>
+            <option value="Stain Removal">Stain Removal</option>
+            <option value="Special Care Items">Special Care Items</option>
+            <option value="Bulk Laundry">Bulk Laundry</option>
             <option value="Pickup & Delivery">Pickup & Delivery</option>
         </select>
 

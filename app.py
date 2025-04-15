@@ -31,13 +31,14 @@ def order():
     if request.method == 'POST':
         name = request.form.get('name')
         phone = request.form.get('phone')
+        address = request.form.get('address')
         service = request.form.get('service')
         pickup_date = request.form.get('pickup_date')
         notes = request.form.get('notes')
 
         with open('orders.csv', 'a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([name, phone, service, pickup_date, notes])
+            writer.writerow([name, phone, address, service, pickup_date, notes])
 
         flash('Order placed successfully!')
         return redirect(url_for('order'))
