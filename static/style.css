@@ -1,32 +1,62 @@
+/* Body Styling */
 body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Ensures the entire viewport is covered */
+    background: blue; /* Top half as solid blue */
 }
 
+/* Headings */
 h1, h2 {
-    color: #007bff;
+    color: black; /* Headings styled in black */
+    text-align: center; /* Centers the text */
+    margin-top: 20px;
+}
+
+/* Navigation Menu */
+nav {
+    text-align: center;
+    background-color: #34495E; /* Deep navy blue for the navigation bar */
+    padding: 10px 0;
 }
 
 nav a {
-    margin: 0 10px;
+    margin: 0 15px;
     text-decoration: none;
-    color: #333;
+    color: #ECF0F1; /* Light gray for links */
+    font-weight: bold;
 }
 
 nav a:hover {
+    color: #FFD700; /* Golden yellow when hovering over links */
     text-decoration: underline;
 }
 
-form input {
-    padding: 10px;
-    margin-bottom: 10px;
-    width: 250px;
+/* Unordered List */
+ul {
+    list-style-type: none; /* Removes default bullets */
+    padding: 0;
+    text-align: center;
+    margin: 20px 0;
 }
 
+ul li {
+    color: black; /* List items in black */
+    padding: 10px;
+    font-size: 18px;
+}
+
+/* Buttons (if applicable) */
 form button {
     padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
+    background-color: #2C3E50; /* Deep charcoal blue for buttons */
+    color: white; /* White text on buttons */
     border: none;
+    border-radius: 5px; /* Smooth rounded edges */
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #ECF0F1; /* Button changes to light gray on hover */
+    color: black; /* Text turns black for contrast */
 }
