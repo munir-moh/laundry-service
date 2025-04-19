@@ -22,29 +22,39 @@
     {% endwith %}
 
     <form method="POST">
-        <input type="text" name="name" placeholder="Your Full Name" required>
-        <input type="text" name="phone" placeholder="Phone Number" required>
-        <input type="text" name="address" placeholder="Your Address" required>
-
-        <label>Choose a Service:</label>
-        <select name="service" required>
-            <option value="">-- Select --</option>
-            <option value="Washing & Drying">Washing & Drying</option>
-            <option value="Ironing/Pressing">Ironing/Pressing</option>
-            <option value="Folding and Packaging">Folding and Packaging</option>
-            <option value="Dry Cleaning">Dry Cleaning</option>
-            <option value="Stain Removal">Stain Removal</option>
-            <option value="Special Care Items">Special Care Items</option>
-            <option value="Bulk Laundry">Bulk Laundry</option>
-            <option value="Pickup & Delivery">Pickup & Delivery</option>
-        </select>
-
-        <label>Pickup Date:</label>
-        <input type="date" name="pickup_date" required>
-
-        <textarea name="notes" placeholder="Additional Notes (Optional)"></textarea>
-
-        <button type="submit">Submit Order</button>
+        <div>
+            <input type="text" name="name" placeholder="Your Full Name" required>
+        </div>
+        <div>
+            <input type="text" name="phone" placeholder="Phone Number" required>
+        </div>
+        <div>
+            <input type="text" name="address" placeholder="Your Address" required>
+        </div>
+        <div>
+            <label>Choose a Service:</label>
+            <select name="service" required>
+                <option value="">-- Select --</option>
+                <option value="Washing & Drying">Washing & Drying</option>
+                <option value="Ironing/Pressing">Ironing/Pressing</option>
+                <option value="Folding and Packaging">Folding and Packaging</option>
+                <option value="Dry Cleaning">Dry Cleaning</option>
+                <option value="Stain Removal">Stain Removal</option>
+                <option value="Special Care Items">Special Care Items</option>
+                <option value="Bulk Laundry">Bulk Laundry</option>
+                <option value="Pickup & Delivery">Pickup & Delivery</option>
+            </select>
+        </div>
+        <div>
+            <label>Pickup Date:</label>
+            <input type="date" name="pickup_date" required>
+        </div>
+        <div>
+            <textarea name="notes" placeholder="Additional Notes (Optional)"></textarea>
+        </div>
+        <div>
+            <button type="submit">Submit Order</button>
+        </div>
     </form>
 </body>
 </html>
