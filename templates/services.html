@@ -1,10 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Our Services</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-1ycn6Ica9994Vj2zCf+R2t4fSefzQgKkeLxtb/PZLlMLxdPzYtKn8pW8UNbyhVPvfPLk+JZTn3YP5wHdD6rV1Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        nav {
+            background-color: #2c3e50;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 30px;
+        }
+
+        .services-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 40px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .service-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .service-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .service-card i {
+            font-size: 36px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
+
     <nav>
         <a href="/">Home</a>
         <a href="/services">Services</a>
@@ -13,31 +81,51 @@
         <a href="/admin">Admin</a>
         <a href="/contact">Contact Us</a>
     </nav>
+
     <h2>Our Laundry Services</h2>
-    <ol>
-        <li>Washing & Drying</li>
-        <p>Thorough washing and efficient drying of clothes to keep them fresh and clean.</p>
-        
-        <li>Ironing/Pressing</li>
-        <p>Professional ironing to ensure wrinkle-free and perfectly pressed garments.</p>
-        
-        <li>Folding and Packaging</li>
-        <p>Neat folding and secure packaging for organized and ready-to-use clothing.</p>
-        
-        <li>Dry Cleaning</li>
-        <p>Expert dry cleaning for delicate fabrics and special garments requiring extra care.</p>
-        
-        <li>Stain Removal</li>
-        <p>Effective stain removal services to restore garments to their original beauty.</p>
-        
-        <li>Special Care Items</li>
-        <p>Special attention to items needing unique handling, such as wool, silk, or lace.</p>
-        
-        <li>Bulk Laundry</li>
-        <p>Convenient solutions for handling large loads of laundry at once.</p>
-        
-        <li>Pickup & Delivery</li>
-        <p>Reliable pickup and delivery services for ultimate convenience.</p>
-    </ol>
+
+    <div class="services-container">
+        <div class="service-card">
+            <i class="fas fa-soap"></i>
+            <h3>Washing & Drying</h3>
+            <p>Thorough washing and efficient drying of clothes to keep them fresh and clean.</p>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-tshirt"></i>
+            <h3>Ironing/Pressing</h3>
+            <p>Professional ironing to ensure wrinkle-free and perfectly pressed garments.</p>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-box-open"></i>
+            <h3>Folding & Packaging</h3>
+            <p>Neat folding and secure packaging for organized and ready-to-use clothing.</p>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-water"></i>
+            <h3>Dry Cleaning</h3>
+            <p>Expert dry cleaning for delicate fabrics and special garments requiring extra care.</p>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-eraser"></i>
+            <h3>Stain Removal</h3>
+            <p>Effective stain removal services to restore garments to their original beauty.</p>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-hand-holding-water"></i>
+            <h3>Special Care Items</h3>
+            <p>Special attention to items needing unique handling, such as wool, silk, or lace.</p>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-boxes"></i>
+            <h3>Bulk Laundry</h3>
+            <p>Convenient solutions for handling large loads of laundry at once.</p>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-truck"></i>
+            <h3>Pickup & Delivery</h3>
+            <p>Reliable pickup and delivery services for ultimate convenience.</p>
+        </div>
+    </div>
+
 </body>
 </html>
