@@ -3,6 +3,87 @@
 <head>
     <title>CleanSpark Laundry</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #2c3e50;
+        }
+
+        nav {
+            background-color: #2c3e50;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .hero {
+            background: url("{{ url_for('static', filename='laundry-hero.jpg') }}") no-repeat center center/cover;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            background-color: rgba(44, 62, 80, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .container {
+            padding: 40px 20px;
+            max-width: 900px;
+            margin: auto;
+            text-align: center;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2, h3 {
+            color: #2c3e50;
+        }
+
+        ul {
+            text-align: left;
+            list-style-type: disc;
+            margin-left: 30px;
+        }
+
+        blockquote {
+            font-style: italic;
+            background-color: #ffffff;
+            padding: 15px;
+            border-left: 5px solid #2c3e50;
+            margin: 10px 0;
+        }
+
+        button {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #1a252f;
+        }
+    </style>
 </head>
 <body>
     <nav>
@@ -13,36 +94,41 @@
         <a href="/admin">Admin</a>
         <a href="/contact">Contact Us</a>
     </nav>
-    <h1>Welcome to CleanSpark Laundry</h1>
 
-    <h2>Your Trusted Laundry & Dry Cleaning Partner</h2>
-    <p>
-        At CleanSpark Laundry, we take pride in delivering fast, reliable, and affordable laundry services. 
-        Whether it’s everyday wear, delicate fabrics, or large household items, we handle your clothes with 
-        the utmost care using top-quality detergents and modern machines.
-    </p>
+    <div class="hero">
+        <h1>Welcome to CleanSpark Laundry</h1>
+    </div>
 
-    <section>
-        <h3>Why Choose Us?</h3>
-        <ul style="text-align: left; margin-left: 0; padding-left: 20px;">
-            <li>Professional and experienced staff</li>
-            <li>Eco-friendly cleaning solutions</li>
-            <li>On-time pickup and delivery</li>
-            <li>Affordable pricing with no hidden charges</li>
-            <li>100% customer satisfaction guarantee</li>
-        </ul>
-    </section>
+    <div class="container">
+        <h2>Your Trusted Laundry & Dry Cleaning Partner</h2>
+        <p>
+            At CleanSpark Laundry, we take pride in delivering fast, reliable, and affordable laundry services. 
+            Whether it’s everyday wear, delicate fabrics, or large household items, we handle your clothes with 
+            the utmost care using top-quality detergents and modern machines.
+        </p>
 
-    <section>
-        <h3>Ready to Experience CleanSpark?</h3>
-        <p>Booking a service is easy. Just head over to our order page and schedule your pickup!</p>
-        <a href="/order"><button>Place an Order</button></a>
-    </section>
+        <section>
+            <h3>Why Choose Us?</h3>
+            <ul>
+                <li>Professional and experienced staff</li>
+                <li>Eco-friendly cleaning solutions</li>
+                <li>On-time pickup and delivery</li>
+                <li>Affordable pricing with no hidden charges</li>
+                <li>100% customer satisfaction guarantee</li>
+            </ul>
+        </section>
 
-    <section>
-        <h3>What Our Customers Say</h3>
-        <blockquote>"CleanSpark never disappoints. My clothes come back looking brand new!" – Sarah O.</blockquote>
-        <blockquote>"Excellent service and fast delivery. Highly recommended." – James T.</blockquote>
-    </section>
+        <section>
+            <h3>Ready to Experience CleanSpark?</h3>
+            <p>Booking a service is easy. Just head over to our order page and schedule your pickup!</p>
+            <a href="/order"><button>Place an Order</button></a>
+        </section>
+
+        <section>
+            <h3>What Our Customers Say</h3>
+            <blockquote>"CleanSpark never disappoints. My clothes come back looking brand new!" – Sarah O.</blockquote>
+            <blockquote>"Excellent service and fast delivery. Highly recommended." – James T.</blockquote>
+        </section>
+    </div>
 </body>
 </html>
