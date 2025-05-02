@@ -1,10 +1,30 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from datetime import datetime
-import csv
-import os
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key'  # Replace with a secure key
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orders.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    phone = db.Column(db.String(20))
+    email = db.Column(db.String(100))
+    address = db.Column(db.String(200))
+    service = db.Column(db.String(100))
+    pickup_date = db.Column(db.String(50))
+    notes = db.Column(db.Text)
+    order_date = db.Column(db.String(100))
+    sorted_status = db.Column(db.String(10), default="No")
+
+# Create database tables
+with app.app_context():
+    db.create_all()
 
 @app.route('/')
 def dashboard():
@@ -25,23 +45,21 @@ def contact():
 @app.route('/order', methods=['GET', 'POST'])
 def order():
     if request.method == 'POST':
-        name = request.form.get('name')
-        phone = request.form.get('phone')
-        email = request.form.get('email')
-        address = request.form.get('address')
-        service = request.form.get('service')
-        pickup_date = request.form.get('pickup_date')
-        notes = request.form.get('notes')
-        order_date = datetime.now().strftime("%A, %d %B %Y")
-        sorted_status = "No"
-
-        with open('orders.csv', 'a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([name, phone, email, address, service, pickup_date, notes, order_date, sorted_status])
-
+        new_order = Order(
+            name=request.form.get('name'),
+            phone=request.form.get('phone'),
+            email=request.form.get('email'),
+            address=request.form.get('address'),
+            service=request.form.get('service'),
+            pickup_date=request.form.get('pickup_date'),
+            notes=request.form.get('notes'),
+            order_date=datetime.now().strftime("%A, %d %B %Y"),
+            sorted_status="No"
+        )
+        db.session.add(new_order)
+        db.session.commit()
         flash('Order placed successfully!')
         return redirect(url_for('order'))
-
     return render_template('order.html')
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -55,31 +73,32 @@ def admin_login():
             flash('Invalid password')
     return render_template('admin_login.html')
 
-@app.route('/admin-dashboard', methods=['GET'])
+@app.route('/admin-dashboard', methods=['GET', 'POST'])
 def admin_dashboard():
     if not session.get('is_admin'):
         return redirect(url_for('admin_login'))
 
-    orders = []
-    if os.path.exists('orders.csv'):
-        with open('orders.csv', newline='') as file:
-            reader = csv.reader(file)
-            for row in reader:
-                if row:
-                    orders.append(row)
-
-    # Check if admin clicked 'Mark as Sorted'
-    sort_index = request.args.get('sort')
-    if sort_index is not None:
-        index = int(sort_index)
-        if 0 <= index < len(orders):
-            orders[index][-1] = "Yes"
-            with open('orders.csv', 'w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerows(orders)
+    if request.method == 'POST':
+        order_id = request.form.get('order_id')
+        order = Order.query.get(order_id)
+        if order:
+            order.sorted_status = "Yes"
+            db.session.commit()
         return redirect(url_for('admin_dashboard'))
 
+    orders = Order.query.all()
     return render_template('admin_dashboard.html', orders=orders)
+
+@app.route('/mark-sorted/<int:order_id>')
+def mark_sorted(order_id):
+    if not session.get('is_admin'):
+        return redirect(url_for('admin_login'))
+
+    order = Order.query.get(order_id)
+    if order:
+        order.sorted_status = "Yes"
+        db.session.commit()
+    return redirect(url_for('admin_dashboard'))
 
 @app.route('/admin-logout')
 def admin_logout():

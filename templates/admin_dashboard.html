@@ -103,20 +103,22 @@
             </tr>
             {% for order in orders %}
             <tr>
-                <td>{{ order[0] }}</td>
-                <td>{{ order[1] }}</td>
-                <td>{{ order[2] }}</td>
-                <td>{{ order[3] }}</td>
-                <td>{{ order[4] }}</td>
-                <td>{{ order[5] }}</td>
-                <td>{{ order[6] }}</td>
-                <td>{{ order[7] }}</td>
-                <td class="{{ 'sorted' if order[8] == 'Yes' else 'unsorted' }}">{{ order[8] }}</td>
+                <td>{{ order.name }}</td>
+                <td>{{ order.phone }}</td>
+                <td>{{ order.email }}</td>
+                <td>{{ order.address }}</td>
+                <td>{{ order.service }}</td>
+                <td>{{ order.pickup_date }}</td>
+                <td>{{ order.notes }}</td>
+                <td>{{ order.order_date }}</td>
+                <td class="{{ 'sorted' if order.sorted_status == 'Yes' else 'unsorted' }}">{{ order.sorted_status }}</td>
                 <td>
-                    {% if order[8] != 'Yes' %}
-                    <a href="{{ url_for('admin_dashboard', sort=loop.index0) }}">
-                        <button>Mark as Sorted</button>
-                    </a>
+                    {% if order.sorted_status != 'Yes' %}
+                    <form method="POST" action="{{ url_for('admin_dashboard') }}">
+                        <input type="hidden" name="order_id" value="{{ order.id }}">
+                        <button type="submit">Mark as Sorted</button>
+                    </form>
+                    
                     {% else %}
                     <span>✓</span>
                     {% endif %}
