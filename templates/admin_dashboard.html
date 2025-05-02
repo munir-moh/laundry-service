@@ -92,6 +92,7 @@
             <tr>
                 <th>Name</th>
                 <th>Phone</th>
+                <th>Email</th>
                 <th>Address</th>
                 <th>Service</th>
                 <th>Pickup Date</th>
@@ -109,9 +110,10 @@
                 <td>{{ order[4] }}</td>
                 <td>{{ order[5] }}</td>
                 <td>{{ order[6] }}</td>
-                <td class="{{ 'sorted' if order[7] == 'Yes' else 'unsorted' }}">{{ order[7] }}</td>
+                <td>{{ order[7] }}</td>
+                <td class="{{ 'sorted' if order[8] == 'Yes' else 'unsorted' }}">{{ order[8] }}</td>
                 <td>
-                    {% if order[7] != 'Yes' %}
+                    {% if order[8] != 'Yes' %}
                     <a href="{{ url_for('admin_dashboard', sort=loop.index0) }}">
                         <button>Mark as Sorted</button>
                     </a>

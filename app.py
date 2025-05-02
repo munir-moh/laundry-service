@@ -27,6 +27,7 @@ def order():
     if request.method == 'POST':
         name = request.form.get('name')
         phone = request.form.get('phone')
+        email = request.form.get('email')
         address = request.form.get('address')
         service = request.form.get('service')
         pickup_date = request.form.get('pickup_date')
@@ -36,7 +37,7 @@ def order():
 
         with open('orders.csv', 'a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([name, phone, address, service, pickup_date, notes, order_date, sorted_status])
+            writer.writerow([name, phone, email, address, service, pickup_date, notes, order_date, sorted_status])
 
         flash('Order placed successfully!')
         return redirect(url_for('order'))
@@ -83,7 +84,7 @@ def admin_dashboard():
 @app.route('/admin-logout')
 def admin_logout():
     session.pop('is_admin', None)
-    return redirect(url_for('dashboard'))
+    return redirect(url_for('admin_login'))
 
 if __name__ == '__main__':
     app.run(debug=True)

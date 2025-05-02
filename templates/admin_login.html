@@ -5,99 +5,95 @@
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <style>
         body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f8;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-nav {
-    background-color: #2c3e50;
-    padding: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-}
+        nav {
+            background-color: #2c3e50;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
 
-nav a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-.login-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        .login-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-.login-box {
-    background-color: #fff;
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-}
+        .login-box {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
 
-.login-box h2 {
-    margin-bottom: 20px;
-    color: #2c3e50;
-}
+        .login-box h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
 
-/* Container to hold the password field and icon */
-.input-container {
-    display: flex;
-    align-items: center;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 8px;
-    width: 100%;
-    background-color: #fff;
-}
+        .input-container {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            background-color: #fff;
+            margin-bottom: 20px;
+        }
 
-/* Styling for the BoxIcon */
-.lock-icon {
-    font-size: 20px;
-    margin-right: 10px;
-    color: #888;
-}
+        .lock-icon {
+            font-size: 20px;
+            margin-right: 10px;
+            color: #888;
+        }
 
-/* Password input field styling */
-.login-box input[type="password"] {
-    border: none;
-    outline: none;
-    flex: 1;
-    padding: 10px;
-    font-size: 16px;
-}
+        .login-box input[type="password"] {
+            border: none;
+            outline: none;
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+        }
 
-/* Button styling */
-.login-box button {
-    width: 100%;
-    padding: 10px;
-    background-color: #2c3e50;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
 
-.login-box button:hover {
-    background-color: #1a242f;
-}
+        .login-box button:hover {
+            background-color: #1a242f;
+        }
 
-/* Error message styling */
-.error {
-    color: red;
-    margin-top: 10px;
-}
-
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -115,9 +111,10 @@ nav a {
             <h2>Admin Login</h2>
             <form method="POST">
                 <div class="input-container">
-                    <box-icon name="lock-alt" animation="tada" class="lock-icon"></box-icon>
+                    <box-icon name='lock-alt' class="lock-icon"></box-icon>
                     <input type="password" name="password" placeholder="Enter Admin Password" required>
                 </div>
+                <button type="submit">Login</button>
             </form>
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
