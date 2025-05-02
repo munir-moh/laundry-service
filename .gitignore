@@ -2,3 +2,4 @@ __pycache__/
 venv/
 orders.csv
 orders.db
+instance/
