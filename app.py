@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import session
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 
@@ -45,22 +46,58 @@ def contact():
 @app.route('/order', methods=['GET', 'POST'])
 def order():
     if request.method == 'POST':
+        session['pending_order'] = {
+            'name': request.form.get('name'),
+            'phone': request.form.get('phone'),
+            'email': request.form.get('email'),
+            'address': request.form.get('address'),
+            'service': request.form.get('service'),
+            'pickup_date': request.form.get('pickup_date'),
+            'notes': request.form.get('notes'),
+            'order_date': datetime.now().strftime("%A, %d %B %Y")
+        }
+        return render_template('confirm_order.html')
+    return render_template('order.html')
+
+@app.route('/finalize-order', methods=['POST'])
+def finalize_order():
+    pending = session.pop('pending_order', None)
+    if pending:
         new_order = Order(
-            name=request.form.get('name'),
-            phone=request.form.get('phone'),
-            email=request.form.get('email'),
-            address=request.form.get('address'),
-            service=request.form.get('service'),
-            pickup_date=request.form.get('pickup_date'),
-            notes=request.form.get('notes'),
-            order_date=datetime.now().strftime("%A, %d %B %Y"),
+            name=pending['name'],
+            phone=pending['phone'],
+            email=pending['email'],
+            address=pending['address'],
+            service=pending['service'],
+            pickup_date=pending['pickup_date'],
+            notes=pending['notes'],
+            order_date=pending['order_date'],
             sorted_status="No"
         )
         db.session.add(new_order)
         db.session.commit()
         flash('Order placed successfully!')
-        return redirect(url_for('order'))
-    return render_template('order.html')
+    return redirect(url_for('order'))
+
+@app.route('/cancel-order', methods=['POST'])
+def cancel_order():
+    pending = session.pop('pending_order', None)
+    if pending:
+        cancelled_order = Order(
+            name=pending['name'],
+            phone=pending['phone'],
+            email=pending['email'],
+            address=pending['address'],
+            service=pending['service'],
+            pickup_date=pending['pickup_date'],
+            notes=pending['notes'],
+            order_date=pending['order_date'],
+            sorted_status="Cancelled"
+        )
+        db.session.add(cancelled_order)
+        db.session.commit()
+        flash('Order was cancelled within the 1-minute window.')
+    return redirect(url_for('order'))
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_login():

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirm Order</title>
+    <script>
+        let countdown = 60;
+        function updateTimer() {
+            document.getElementById("timer").innerText = countdown;
+            countdown--;
+            if (countdown >= 0) {
+                setTimeout(updateTimer, 1000);
+            } else {
+                document.getElementById("cancelForm").submit();
+            }
+        }
+        window.onload = updateTimer;
+    </script>
+</head>
+<body style="font-family: Arial, sans-serif; text-align: center; padding: 40px; background-color: #f9f9f9;">
+    <h2 style="color: #2c3e50;">Your order is almost submitted!</h2>
+    <p>You have <span id="timer">60</span> seconds to cancel if you change your mind.</p>
+
+    <form action="{{ url_for('cancel_order') }}" method="POST">
+        <button type="submit" style="background-color: #e74c3c; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Cancel Order</button>
+    </form>
+
+    <form id="cancelForm" action="{{ url_for('finalize_order') }}" method="POST" style="display: none;"></form>
+</body>
+</html>
