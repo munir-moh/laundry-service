@@ -113,18 +113,21 @@
                 <td>{{ order.order_date }}</td>
                 <td class="{{ 'sorted' if order.sorted_status == 'Yes' else 'unsorted' }}">{{ order.sorted_status }}</td>
                 <td>
-                    {% if order.sorted_status != 'Yes' and order.sorted_status != 'Cancelled' %}
-                    <a href="{{ url_for('mark_sorted', order_id=order.id) }}">
-                        <button>Mark as Sorted</button>
-                    </a>
-                    {% elif order.sorted_status == 'Cancelled' %}
-                        <span style="color:red;">Cancelled</span><br>
-                        <small><strong>Reason:</strong> {{ order.cancel_reason }}</small>
+                    {% if order.cancelled %}
+                        <span style="color: red;">Cancelled</span><br>
+                        {% if order.cancel_reason %}
+                            <small>Reason: {{ order.cancel_reason }}</small>
+                        {% endif %}
+                    {% elif order.sorted_status != 'Yes' %}
+                        <form method="POST" action="{{ url_for('admin_dashboard') }}">
+                            <input type="hidden" name="order_id" value="{{ order.id }}">
+                            <button type="submit">Mark as Sorted</button>
+                        </form>
                     {% else %}
                         <span>✓</span>
                     {% endif %}
                 </td>
-            </tr>
+            </tr>            
             {% endfor %}
         </table>
     {% else %}
