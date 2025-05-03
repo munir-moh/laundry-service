@@ -22,6 +22,8 @@ class Order(db.Model):
     notes = db.Column(db.Text)
     order_date = db.Column(db.String(100))
     sorted_status = db.Column(db.String(10), default="No")
+    cancelled = db.Column(db.Boolean, default=False)
+    cancel_reason = db.Column(db.Text)
 
 # Create database tables
 with app.app_context():
@@ -46,17 +48,20 @@ def contact():
 @app.route('/order', methods=['GET', 'POST'])
 def order():
     if request.method == 'POST':
-        session['pending_order'] = {
-            'name': request.form.get('name'),
-            'phone': request.form.get('phone'),
-            'email': request.form.get('email'),
-            'address': request.form.get('address'),
-            'service': request.form.get('service'),
-            'pickup_date': request.form.get('pickup_date'),
-            'notes': request.form.get('notes'),
-            'order_date': datetime.now().strftime("%A, %d %B %Y")
-        }
-        return render_template('confirm_order.html')
+        new_order = Order(
+            name = request.form.get('name'),
+            phone = request.form.get('phone'),
+            email = request.form.get('email'),
+            address = request.form.get('address'),
+            service = request.form.get('service'),
+            pickup_date = request.form.get('pickup_date'),
+            notes = request.form.get('notes'),
+            order_date = datetime.now().strftime("%A, %d %B %Y"),
+            sorted_status = "No"
+        )
+        db.session.add(new_order)
+        db.session.commit()
+        return render_template('confirm_order.html', order_id=new_order.id)
     return render_template('order.html')
 
 @app.route('/finalize-order', methods=['POST'])
@@ -82,6 +87,7 @@ def finalize_order():
 @app.route('/cancel-order', methods=['POST'])
 def cancel_order():
     pending = session.pop('pending_order', None)
+    reason = request.form.get('cancel_reason')
     if pending:
         cancelled_order = Order(
             name=pending['name'],
@@ -92,7 +98,9 @@ def cancel_order():
             pickup_date=pending['pickup_date'],
             notes=pending['notes'],
             order_date=pending['order_date'],
-            sorted_status="Cancelled"
+            sorted_status="Cancelled",
+            cancelled=True,
+            cancel_reason=reason
         )
         db.session.add(cancelled_order)
         db.session.commit()
