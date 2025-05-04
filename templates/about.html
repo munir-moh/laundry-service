@@ -69,6 +69,102 @@
                 font-size: 15px;
             }
         }
+
+        /* Vision and Mission Section */
+        .vision-mission-section {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            max-width: 900px;
+            margin: 50px auto 30px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .vm-box {
+            background-color: #f5f5f5;
+            padding: 30px 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .vm-box.fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .vm-icon {
+            font-size: 36px;
+            color: #2f8f2f;
+            margin-bottom: 15px;
+        }
+
+        /* Working Process */
+        .timeline-wrapper {
+            background-color: #f5f5f5;
+            padding: 30px 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .timeline-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline-step {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-in-out;
+        }
+
+        .timeline-step.left .timeline-content {
+            margin-right: auto;
+        }
+
+        .timeline-step.right .timeline-content {
+            margin-left: auto;
+        }
+
+        .timeline-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin: 0 15px;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            font-weight: 500;
+            color: #333;
+            max-width: 250px;
+        }
+
+        .timeline-step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -109,120 +205,104 @@
             <p>
                 Thank you for choosing CleanSpark Laundry. We look forward to serving you and making your laundry experience as seamless as possible.
             </p>
+            
+            <!-- Working Process -->
             <section style="background-color: #f2f2f2; padding: 50px 20px;">
                 <h2 style="text-align: center; color: #2c3e50;">Our Working Process</h2>
                 <div class="timeline-wrapper">
                     <div class="timeline-container" id="timelineContainer"></div>
-                  </div>                  
+                </div>                  
             </section>
-            
-            <!-- Font Awesome for icons -->
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-            
-            <style>
-            .timeline-wrapper {
-                background-color: #f5f5f5;
-                padding: 30px 15px;
-                border-radius: 10px;
-                margin-top: 20px;
-                text-align: center;
-            }
-
-            .timeline-container {
-                position: relative;
-                width: 100%;
-                max-width: 800px;
-                margin: 0 auto;
-            }
-
-            .timeline-step {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin: 30px 0;
-                position: relative;
-                opacity: 0;
-                transform: translateY(30px);
-                transition: all 0.6s ease-in-out;
-            }
-
-            .timeline-step.left .timeline-content {
-                margin-right: auto;
-            }
-
-            .timeline-step.right .timeline-content {
-                margin-left: auto;
-            }
-
-            .timeline-icon {
-                width: 50px;
-                height: 50px;
-                background-color: #2c3e50;
-                color: white;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 20px;
-                margin: 0 15px;
-                flex-shrink: 0;
-            }
-
-            .timeline-content {
-                background: white;
-                padding: 10px 20px;
-                border-radius: 8px;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-                font-weight: 500;
-                color: #333;
-                max-width: 250px;
-            }
-
-            .timeline-step.visible {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            </style>
-              
-              <script>
-                const steps = [
-                  { icon: 'fas fa-concierge-bell', text: '1. Select Service' },
-                  { icon: 'fas fa-calendar-alt', text: '2. Set Schedule' },
-                  { icon: 'fas fa-clipboard-list', text: '3. Place Order' },
-                  { icon: 'fas fa-truck', text: '4. Pick Up' },
-                  { icon: 'fas fa-tshirt', text: '5. Render Service' },
-                  { icon: 'fas fa-box-open', text: '6. Delivery' }
-                ];
-              
-                const container = document.getElementById('timelineContainer');
-                steps.forEach((step, index) => {
-                  const side = index % 2 === 0 ? 'left' : 'right';
-                  const stepDiv = document.createElement('div');
-                  stepDiv.className = `timeline-step ${side}`;
-                  stepDiv.innerHTML = `
-                    ${side === 'left'
-                      ? `<div class="timeline-icon"><i class="${step.icon}"></i></div><div class="timeline-content">${step.text}</div>`
-                      : `<div class="timeline-content">${step.text}</div><div class="timeline-icon"><i class="${step.icon}"></i></div>`}
-                  `;
-                  container.appendChild(stepDiv);
-                });
-              
-                function handleScrollAnimation() {
-                  const steps = document.querySelectorAll('.timeline-step');
-                  steps.forEach(step => {
-                    const rect = step.getBoundingClientRect();
-                    if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
-                      step.classList.add('visible');
-                    } else {
-                      step.classList.remove('visible'); // animation re-triggers on scroll
-                    }
-                  });
-                }
-              
-                window.addEventListener('scroll', handleScrollAnimation);
-                window.addEventListener('load', handleScrollAnimation);
-              </script>                                                                                                    
         </div>
     </div>
+
+    <script>
+        // Timeline steps
+        const steps = [
+            { icon: 'fas fa-concierge-bell', text: '1. Select Service' },
+            { icon: 'fas fa-calendar-alt', text: '2. Set Schedule' },
+            { icon: 'fas fa-clipboard-list', text: '3. Place Order' },
+            { icon: 'fas fa-truck', text: '4. Pick Up' },
+            { icon: 'fas fa-tshirt', text: '5. Render Service' },
+            { icon: 'fas fa-box-open', text: '6. Delivery' }
+        ];
+
+        const container = document.getElementById('timelineContainer');
+        steps.forEach((step, index) => {
+            const side = index % 2 === 0 ? 'left' : 'right';
+            const stepDiv = document.createElement('div');
+            stepDiv.className = `timeline-step ${side}`;
+            stepDiv.innerHTML = `
+                ${side === 'left'
+                    ? `<div class="timeline-icon"><i class="${step.icon}"></i></div><div class="timeline-content">${step.text}</div>`
+                    : `<div class="timeline-content">${step.text}</div><div class="timeline-icon"><i class="${step.icon}"></i></div>`}
+            `;
+            container.appendChild(stepDiv);
+        });
+
+        // Scroll-based animation
+        function handleScrollAnimation() {
+            const timelineSteps = document.querySelectorAll('.timeline-step');
+            timelineSteps.forEach(step => {
+                const rect = step.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
+                    step.classList.add('visible');
+                } else {
+                    step.classList.remove('visible');
+                }
+            });
+
+            const vmBoxes = document.querySelectorAll('.fade-in-on-scroll');
+            vmBoxes.forEach(box => {
+                const rect = box.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
+                    box.classList.add('fade-in');
+                } else {
+                    box.classList.remove('fade-in');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScrollAnimation);
+        window.addEventListener('load', handleScrollAnimation);
+    </script>
+            <!-- Vision and Mission Section -->
+            <div class="vision-mission-section">
+                <div class="vm-box fade-in-on-scroll">
+                    <i class="fas fa-eye vm-icon"></i>
+                    <h3>Our Vision</h3>
+                    <p>
+                        To be the most trusted and innovative laundry service provider, setting the standard for quality, convenience, and customer satisfaction across Nigeria.
+                    </p>
+                </div>
+
+                <div class="vm-box fade-in-on-scroll">
+                    <i class="fas fa-bullseye vm-icon"></i>
+                    <h3>Our Mission</h3>
+                    <p>
+                        To deliver reliable, affordable, and high-quality laundry solutions that save time and enhance lives, while maintaining eco-friendly practices and building lasting relationships with our customers.
+                    </p>
+                </div>
+            </div>
+            <footer style="background-color: #2c3e50; color: white; padding: 20px 10px; text-align: center;">
+                <div style="margin-bottom: 10px;">
+                    <a href="https://wa.me/2349012345678" target="_blank" style="color: white; margin: 0 10px; font-size: 20px;">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://instagram.com/cleansparklaundry" target="_blank" style="color: white; margin: 0 10px; font-size: 20px;">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://x.com/cleansparklaundry" target="_blank" style="color: white; margin: 0 10px; font-size: 20px;">
+                        <i class="fab fa-x-twitter"></i>
+                    </a>
+                    <a href="https://facebook.com/cleansparklaundry" target="_blank" style="color: white; margin: 0 10px; font-size: 20px;">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                </div>
+                <div style="font-size: 14px;">
+                    &copy; {{ current_year }} CleanSpark Laundry. All rights reserved.
+                </div>
+            </footer>
+            
 </body>
 </html>

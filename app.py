@@ -150,5 +150,9 @@ def admin_logout():
     session.pop('is_admin', None)
     return redirect(url_for('admin_login'))
 
+@app.context_processor
+def inject_current_year():
+    return {'current_year': datetime.now().year}
+
 if __name__ == '__main__':
     app.run(debug=True)
