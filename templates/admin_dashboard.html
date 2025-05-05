@@ -94,6 +94,7 @@
                 <th>Notes</th>
                 <th>Order Date</th>
                 <th>Sorted</th>
+                <th>Cancel Reason</th>
                 <th>Action</th>
             </tr>
             {% for order in orders %}
@@ -106,13 +107,31 @@
                 <td>{{ order.pickup_date }}</td>
                 <td>{{ order.notes }}</td>
                 <td>{{ order.order_date }}</td>
-                <td class="{{ 'sorted' if order.sorted_status == 'Yes' else 'unsorted' }}">{{ order.sorted_status }}</td>
+        
+                <!-- Sorted Status -->
+                <td class="{% if order.cancelled %}unsorted{% elif order.sorted_status == 'Yes' %}sorted{% else %}unsorted{% endif %}">
+                    {% if order.cancelled %}
+                        <span style="color: red; font-weight: bold;">Cancelled</span>
+                    {% else %}
+                        {{ order.sorted_status }}
+                    {% endif %}
+                </td>
+        
+                <!-- Cancel Reason -->
+                <td>
+                    {% if order.cancelled and order.cancel_reason %}
+                        {{ order.cancel_reason }}
+                    {% elif order.cancelled %}
+                        No reason provided
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+        
+                <!-- Action Column -->
                 <td>
                     {% if order.cancelled %}
-                        <span style="color: red;">Cancelled</span><br>
-                        {% if order.cancel_reason %}
-                            <small>Reason: {{ order.cancel_reason }}</small>
-                        {% endif %}
+                        <span style="color: red;">N/A</span>
                     {% elif order.sorted_status != 'Yes' %}
                         <form method="POST" action="{{ url_for('admin_dashboard') }}">
                             <input type="hidden" name="order_id" value="{{ order.id }}">
@@ -122,9 +141,9 @@
                         <span>✓</span>
                     {% endif %}
                 </td>
-            </tr>            
+            </tr>
             {% endfor %}
-        </table>
+        </table>                
     {% else %}
         <p style="text-align: center;">No orders submitted yet.</p>
     {% endif %}

@@ -2,9 +2,11 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask import session
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from datetime import timedelta
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key'  # Replace with a secure key
+app.permanent_session_lifetime = timedelta(hours=1)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orders.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -86,8 +88,8 @@ def finalize_order():
 
 @app.route('/cancel-order', methods=['POST'])
 def cancel_order():
-    pending = session.pop('pending_order', None)
     reason = request.form.get('cancel_reason')
+    pending = session.pop('pending_order', None)
     if pending:
         cancelled_order = Order(
             name=pending['name'],
@@ -98,13 +100,15 @@ def cancel_order():
             pickup_date=pending['pickup_date'],
             notes=pending['notes'],
             order_date=pending['order_date'],
-            sorted_status="Cancelled",
+            sorted_status="No",  # Leave as "No" — HTML handles cancelled display
             cancelled=True,
             cancel_reason=reason
         )
         db.session.add(cancelled_order)
         db.session.commit()
         flash('Order was cancelled within the 1-minute window.')
+    else:
+        flash('No pending order found or session expired.')
     return redirect(url_for('order'))
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -112,6 +116,7 @@ def admin_login():
     if request.method == 'POST':
         password = request.form.get('password')
         if password == 'munirmuhd12':
+            session.permanent = True  # Make session last across requests
             session['is_admin'] = True
             return redirect(url_for('admin_dashboard'))
         else:
