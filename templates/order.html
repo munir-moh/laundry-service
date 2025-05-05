@@ -17,14 +17,7 @@
 </head>
 <body style="margin: 0; font-family: Arial, sans-serif; background-color: #f2f2f2;">
 
-    <nav style="background-color: #2c3e50; padding: 10px; text-align: center;">
-        <a href="/" style="color: white; margin: 0 15px; text-decoration: none; font-weight: bold;">Home</a>
-        <a href="/services" style="color: white; margin: 0 15px; text-decoration: none; font-weight: bold;">Services</a>
-        <a href="/order" style="color: white; margin: 0 15px; text-decoration: none; font-weight: bold;">Place Order</a>
-        <a href="/about" style="color: white; margin: 0 15px; text-decoration: none; font-weight: bold;">About Us</a>
-        <a href="/admin" style="color: white; margin: 0 15px; text-decoration: none; font-weight: bold;">Admin</a>
-        <a href="/contact" style="color: white; margin: 0 15px; text-decoration: none; font-weight: bold;">Contact Us</a>
-    </nav>
+    {% include 'navbar.html' %} 
 
     <div style="display: flex; justify-content: center; align-items: center; height: calc(100vh - 60px);">
         <form method="POST" style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 90%; max-width: 400px;">
