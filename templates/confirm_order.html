@@ -26,6 +26,12 @@
             width: 90%;
             max-width: 600px;
             text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         h2 {
@@ -61,30 +67,40 @@
         }
 
         .cancel-section {
-            margin-top: 20px;
+            margin-top: 30px;
         }
 
         .flash {
-            color: green;
-            font-weight: bold;
-            margin-bottom: 10px;
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            animation: flashFade 1s ease-in-out;
+        }
+
+        @keyframes flashFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="flash">
-                {% for message in messages %}
-                    {{ message }}
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-
     <div class="wrapper">
         <div class="container">
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="flash">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
             <h2>Confirm Your Order</h2>
             <p>You have <span class="countdown" id="timer">60</span> seconds to confirm or cancel.</p>
 
@@ -115,11 +131,17 @@
                 timerDisplay.textContent = "Time's up!";
                 confirmBtn.disabled = true;
                 cancelBtn.disabled = true;
-                setTimeout(() => {
-                    window.location.href = "{{ url_for('order') }}";
-                }, 2000);
             }
         }, 1000);
     </script>
+
+    {% if redirect %}
+    <script>
+        setTimeout(function () {
+            window.location.href = "{{ url_for('order') }}";
+        }, 5000);
+    </script>
+    {% endif %}
+
 </body>
 </html>

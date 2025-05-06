@@ -79,16 +79,16 @@ def finalize_order():
             )
             db.session.add(new_order)
             db.session.commit()
-            flash('Order placed successfully!')
+            flash('Order placed successfully!', 'success')
         else:
-            flash('Time expired! Order was not placed.')
-    return redirect(url_for('order'))
+            flash("Time expired! Order was not placed.", 'error')
+    return render_template('confirm_order.html', redirect=True)
 
 @app.route('/cancel-order', methods=['POST'])
 def cancel_order():
     session.pop('pending_order', None)
-    flash('Order was cancelled.')
-    return redirect(url_for('order'))
+    flash('Order was cancelled.', 'error')
+    return render_template('confirm_order.html', redirect=True)
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_login():
