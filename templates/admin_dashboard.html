@@ -30,7 +30,6 @@
         h2, h3 {
             text-align: center;
             margin-top: 20px;
-            color: #2c3e50;
         }
 
         table {
@@ -77,8 +76,6 @@
 </head>
 <body>
 
-    {% include 'navbar.html' %}
-
     <h2>Admin Dashboard</h2>
 
     {% if orders %}
@@ -94,7 +91,6 @@
                 <th>Notes</th>
                 <th>Order Date</th>
                 <th>Sorted</th>
-                <th>Cancel Reason</th>
                 <th>Action</th>
             </tr>
             {% for order in orders %}
@@ -107,7 +103,7 @@
                 <td>{{ order.pickup_date }}</td>
                 <td>{{ order.notes }}</td>
                 <td>{{ order.order_date }}</td>
-        
+
                 <!-- Sorted Status -->
                 <td class="{% if order.cancelled %}unsorted{% elif order.sorted_status == 'Yes' %}sorted{% else %}unsorted{% endif %}">
                     {% if order.cancelled %}
@@ -116,18 +112,7 @@
                         {{ order.sorted_status }}
                     {% endif %}
                 </td>
-        
-                <!-- Cancel Reason -->
-                <td>
-                    {% if order.cancelled and order.cancel_reason %}
-                        {{ order.cancel_reason }}
-                    {% elif order.cancelled %}
-                        No reason provided
-                    {% else %}
-                        -
-                    {% endif %}
-                </td>
-        
+
                 <!-- Action Column -->
                 <td>
                     {% if order.cancelled %}
@@ -165,7 +150,7 @@
             </button>
         </form>
     </div>    
-    
+
     <footer style="background-color: #2c3e50; color: white; padding: 20px 10px; text-align: center;">
         <div style="margin-bottom: 10px;">
             <a href="https://wa.me/2349012345678" target="_blank" style="color: white; margin: 0 10px; font-size: 20px;">
@@ -185,5 +170,6 @@
             &copy; {{ current_year }} CleanSpark Laundry. All rights reserved.
         </div>
     </footer>  
+
 </body>
 </html>

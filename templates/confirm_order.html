@@ -60,16 +60,8 @@
             cursor: not-allowed;
         }
 
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
         .cancel-section {
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         .flash {
@@ -102,8 +94,6 @@
 
             <div class="cancel-section">
                 <form method="POST" action="{{ url_for('cancel_order') }}">
-                    <label for="cancel_reason"><strong>Reason for cancellation:</strong></label><br>
-                    <textarea name="cancel_reason" rows="4" required placeholder="Tell us why you're cancelling..."></textarea><br>
                     <button type="submit" style="background-color: red;" id="cancelBtn">Cancel Order</button>
                 </form>
             </div>
@@ -125,6 +115,9 @@
                 timerDisplay.textContent = "Time's up!";
                 confirmBtn.disabled = true;
                 cancelBtn.disabled = true;
+                setTimeout(() => {
+                    window.location.href = "{{ url_for('order') }}";
+                }, 2000);
             }
         }, 1000);
     </script>

@@ -1,11 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
-from flask import session
-from datetime import datetime
+from flask import Flask, render_template, request, redirect, url_for, flash, session 
+from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
-from datetime import timedelta
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key'  # Replace with a secure key
+app.secret_key = 'your-secret-key'
 app.permanent_session_lifetime = timedelta(hours=1)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orders.db'
@@ -25,9 +23,7 @@ class Order(db.Model):
     order_date = db.Column(db.String(100))
     sorted_status = db.Column(db.String(10), default="No")
     cancelled = db.Column(db.Boolean, default=False)
-    cancel_reason = db.Column(db.Text)
 
-# Create database tables
 with app.app_context():
     db.create_all()
 
@@ -50,65 +46,48 @@ def contact():
 @app.route('/order', methods=['GET', 'POST'])
 def order():
     if request.method == 'POST':
-        new_order = Order(
-            name = request.form.get('name'),
-            phone = request.form.get('phone'),
-            email = request.form.get('email'),
-            address = request.form.get('address'),
-            service = request.form.get('service'),
-            pickup_date = request.form.get('pickup_date'),
-            notes = request.form.get('notes'),
-            order_date = datetime.now().strftime("%A, %d %B %Y"),
-            sorted_status = "No"
-        )
-        db.session.add(new_order)
-        db.session.commit()
-        return render_template('confirm_order.html', order_id=new_order.id)
+        # Temporarily store the order in session
+        session['pending_order'] = {
+            'name': request.form.get('name'),
+            'phone': request.form.get('phone'),
+            'email': request.form.get('email'),
+            'address': request.form.get('address'),
+            'service': request.form.get('service'),
+            'pickup_date': request.form.get('pickup_date'),
+            'notes': request.form.get('notes'),
+            'order_date': datetime.now().strftime("%A, %d %B %Y"),
+            'created_at': datetime.now().timestamp()
+        }
+        return render_template('confirm_order.html')
     return render_template('order.html')
 
 @app.route('/finalize-order', methods=['POST'])
 def finalize_order():
     pending = session.pop('pending_order', None)
     if pending:
-        new_order = Order(
-            name=pending['name'],
-            phone=pending['phone'],
-            email=pending['email'],
-            address=pending['address'],
-            service=pending['service'],
-            pickup_date=pending['pickup_date'],
-            notes=pending['notes'],
-            order_date=pending['order_date'],
-            sorted_status="No"
-        )
-        db.session.add(new_order)
-        db.session.commit()
-        flash('Order placed successfully!')
+        if datetime.now().timestamp() - pending['created_at'] <= 60:
+            new_order = Order(
+                name=pending['name'],
+                phone=pending['phone'],
+                email=pending['email'],
+                address=pending['address'],
+                service=pending['service'],
+                pickup_date=pending['pickup_date'],
+                notes=pending['notes'],
+                order_date=pending['order_date'],
+                sorted_status="No"
+            )
+            db.session.add(new_order)
+            db.session.commit()
+            flash('Order placed successfully!')
+        else:
+            flash('Time expired! Order was not placed.')
     return redirect(url_for('order'))
 
 @app.route('/cancel-order', methods=['POST'])
 def cancel_order():
-    reason = request.form.get('cancel_reason')
-    pending = session.pop('pending_order', None)
-    if pending:
-        cancelled_order = Order(
-            name=pending['name'],
-            phone=pending['phone'],
-            email=pending['email'],
-            address=pending['address'],
-            service=pending['service'],
-            pickup_date=pending['pickup_date'],
-            notes=pending['notes'],
-            order_date=pending['order_date'],
-            sorted_status="No",  # Leave as "No" — HTML handles cancelled display
-            cancelled=True,
-            cancel_reason=reason
-        )
-        db.session.add(cancelled_order)
-        db.session.commit()
-        flash('Order was cancelled within the 1-minute window.')
-    else:
-        flash('No pending order found or session expired.')
+    session.pop('pending_order', None)
+    flash('Order was cancelled.')
     return redirect(url_for('order'))
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -116,7 +95,7 @@ def admin_login():
     if request.method == 'POST':
         password = request.form.get('password')
         if password == 'munirmuhd12':
-            session.permanent = True  # Make session last across requests
+            session.permanent = True
             session['is_admin'] = True
             return redirect(url_for('admin_dashboard'))
         else:
@@ -136,14 +115,13 @@ def admin_dashboard():
             db.session.commit()
         return redirect(url_for('admin_dashboard'))
 
-    orders = Order.query.all()
+    orders = Order.query.filter_by(cancelled=False).all()
     return render_template('admin_dashboard.html', orders=orders)
 
 @app.route('/mark-sorted/<int:order_id>')
 def mark_sorted(order_id):
     if not session.get('is_admin'):
         return redirect(url_for('admin_login'))
-
     order = Order.query.get(order_id)
     if order:
         order.sorted_status = "Yes"
