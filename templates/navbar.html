@@ -8,7 +8,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        position: relative;
+        position: sticky;
+        top: 0;
         z-index: 1000;
     }
 
@@ -23,7 +24,12 @@
         color: white;
         font-size: 24px;
         cursor: pointer;
-        order: -1; /* moves hamburger to the left */
+        order: -1;
+        transition: color 0.3s;
+    }
+
+    .menu-icon:hover {
+        color: #1abc9c;
     }
 
     .sidebar {
@@ -34,12 +40,12 @@
         left: -250px;
         background-color: #2c3e50;
         overflow-x: hidden;
-        transition: 0.4s;
+        transition: left 0.4s ease;
         z-index: 2000;
         display: flex;
         flex-direction: column;
-        align-items: center; /* Horizontally center items */
-        padding-top: 60px; /* Push links from top */
+        align-items: center;
+        padding-top: 60px;
     }
 
     .sidebar a {
@@ -50,41 +56,55 @@
         width: 100%;
         text-align: center;
         border-bottom: 1px solid #444;
+        transition: background-color 0.3s, color 0.3s;
     }
 
-    .sidebar a:hover {
+    .sidebar a:hover, .sidebar a.active {
         background-color: #34495e;
+        color: #1abc9c;
     }
 
     .close-btn {
         position: absolute;
         top: 15px;
         right: 20px;
-        font-size: 30px;
+        font-size: 28px;
         color: white;
         cursor: pointer;
+    }
+
+    .close-btn:hover {
+        color: #e74c3c;
     }
 
     body.sidebar-open {
         overflow: hidden;
     }
+
+    @media (min-width: 768px) {
+        .menu-icon {
+            display: none;
+        }
+    }
 </style>
 
 <div class="navbar">
-    <div class="menu-icon" onclick="openSidebar()">
+    <div class="menu-icon" onclick="openSidebar()" aria-label="Open menu" role="button" tabindex="0">
         <i class="fas fa-bars"></i>
     </div>
     <a class="logo" href="/">CleanSpark Laundry</a>
 </div>
 
-<div id="mySidebar" class="sidebar">
-    <div class="close-btn" onclick="closeSidebar()">&times;</div>
-    <a href="/">Home</a>
-    <a href="/services">Services</a>
-    <a href="/order">Place Order</a>
-    <a href="/about">About</a>
-    <a href="/admin">Admin</a>
-    <a href="/contact">Contact</a>
+<div id="mySidebar" class="sidebar" aria-label="Sidebar menu">
+    <div class="close-btn" onclick="closeSidebar()" aria-label="Close menu" role="button" tabindex="0">
+        <i class="fas fa-times"></i>
+    </div>
+    <a href="/" class="{% if request.path == '/' %}active{% endif %}">Home</a>
+    <a href="/services" class="{% if request.path == '/services' %}active{% endif %}">Services</a>
+    <a href="/order" class="{% if request.path == '/order' %}active{% endif %}">Place Order</a>
+    <a href="/about" class="{% if request.path == '/about' %}active{% endif %}">About</a>
+    <a href="/admin" class="{% if request.path == '/admin' %}active{% endif %}">Admin</a>
+    <a href="/contact" class="{% if request.path == '/contact' %}active{% endif %}">Contact</a>
 </div>
 
 <script>
@@ -97,4 +117,12 @@
         document.getElementById("mySidebar").style.left = "-250px";
         document.body.classList.remove('sidebar-open');
     }
+
+    // Optional: Close sidebar when clicking outside
+    document.addEventListener('click', function (event) {
+        const sidebar = document.getElementById('mySidebar');
+        if (!sidebar.contains(event.target) && !event.target.closest('.menu-icon')) {
+            closeSidebar();
+        }
+    });
 </script>
