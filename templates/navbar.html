@@ -2,34 +2,51 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
+    :root {
+        --bg-color: #2c3e50;
+        --text-color: white;
+        --hover-color: #34495e;
+    }
+
+    body.dark-mode {
+        --bg-color: #ecf0f1;
+        --text-color: #2c3e50;
+        --hover-color: #bdc3c7;
+        background-color: #f9f9f9;
+        color: #2c3e50;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
     .navbar {
-        background-color: #2c3e50;
+        background-color: var(--bg-color);
         padding: 10px 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        position: sticky;
-        top: 0;
+        position: relative;
         z-index: 1000;
+        transition: background-color 0.3s ease;
     }
 
     .navbar .logo {
-        color: #ffffff;
+        color: var(--text-color);
         font-weight: bold;
         font-size: 20px;
         text-decoration: none;
     }
 
     .menu-icon {
-        color: white;
+        color: var(--text-color);
         font-size: 24px;
         cursor: pointer;
         order: -1;
-        transition: color 0.3s;
     }
 
-    .menu-icon:hover {
-        color: #1abc9c;
+    .toggle-dark {
+        color: var(--text-color);
+        font-size: 20px;
+        cursor: pointer;
+        margin-left: 10px;
     }
 
     .sidebar {
@@ -38,9 +55,9 @@
         position: fixed;
         top: 0;
         left: -250px;
-        background-color: #2c3e50;
+        background-color: var(--bg-color);
         overflow-x: hidden;
-        transition: left 0.4s ease;
+        transition: 0.4s ease;
         z-index: 2000;
         display: flex;
         flex-direction: column;
@@ -49,62 +66,68 @@
     }
 
     .sidebar a {
-        color: white;
+        color: var(--text-color);
         padding: 14px 0;
         text-decoration: none;
         font-size: 20px;
         width: 100%;
         text-align: center;
-        border-bottom: 1px solid #444;
-        transition: background-color 0.3s, color 0.3s;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
+        opacity: 0;
+        transform: translateX(-20px);
+        animation: slideIn 0.4s forwards;
     }
 
-    .sidebar a:hover, .sidebar a.active {
-        background-color: #34495e;
-        color: #1abc9c;
+    .sidebar a:nth-child(2) { animation-delay: 0.1s; }
+    .sidebar a:nth-child(3) { animation-delay: 0.2s; }
+    .sidebar a:nth-child(4) { animation-delay: 0.3s; }
+    .sidebar a:nth-child(5) { animation-delay: 0.4s; }
+    .sidebar a:nth-child(6) { animation-delay: 0.5s; }
+    .sidebar a:nth-child(7) { animation-delay: 0.6s; }
+
+    @keyframes slideIn {
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .sidebar a:hover {
+        background-color: var(--hover-color);
     }
 
     .close-btn {
         position: absolute;
         top: 15px;
         right: 20px;
-        font-size: 28px;
-        color: white;
+        font-size: 30px;
+        color: var(--text-color);
         cursor: pointer;
-    }
-
-    .close-btn:hover {
-        color: #e74c3c;
     }
 
     body.sidebar-open {
         overflow: hidden;
     }
-
-    @media (min-width: 768px) {
-        .menu-icon {
-            display: none;
-        }
-    }
 </style>
 
 <div class="navbar">
-    <div class="menu-icon" onclick="openSidebar()" aria-label="Open menu" role="button" tabindex="0">
+    <div class="menu-icon" onclick="openSidebar()">
         <i class="fas fa-bars"></i>
     </div>
     <a class="logo" href="/">CleanSpark Laundry</a>
+    <div class="toggle-dark" onclick="toggleDarkMode()" title="Toggle Light/Dark Mode">
+        <i class="fas fa-moon"></i>
+    </div>
 </div>
 
-<div id="mySidebar" class="sidebar" aria-label="Sidebar menu">
-    <div class="close-btn" onclick="closeSidebar()" aria-label="Close menu" role="button" tabindex="0">
-        <i class="fas fa-times"></i>
-    </div>
-    <a href="/" class="{% if request.path == '/' %}active{% endif %}">Home</a>
-    <a href="/services" class="{% if request.path == '/services' %}active{% endif %}">Services</a>
-    <a href="/order" class="{% if request.path == '/order' %}active{% endif %}">Place Order</a>
-    <a href="/about" class="{% if request.path == '/about' %}active{% endif %}">About</a>
-    <a href="/admin" class="{% if request.path == '/admin' %}active{% endif %}">Admin</a>
-    <a href="/contact" class="{% if request.path == '/contact' %}active{% endif %}">Contact</a>
+<div id="mySidebar" class="sidebar">
+    <div class="close-btn" onclick="closeSidebar()">&times;</div>
+    <a href="/">Home</a>
+    <a href="/services">Services</a>
+    <a href="/order">Place Order</a>
+    <a href="/about">About</a>
+    <a href="/admin">Admin</a>
+    <a href="/contact">Contact</a>
 </div>
 
 <script>
@@ -118,11 +141,15 @@
         document.body.classList.remove('sidebar-open');
     }
 
-    // Optional: Close sidebar when clicking outside
-    document.addEventListener('click', function (event) {
-        const sidebar = document.getElementById('mySidebar');
-        if (!sidebar.contains(event.target) && !event.target.closest('.menu-icon')) {
-            closeSidebar();
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+
+    window.onload = function () {
+        const isDark = localStorage.getItem('darkMode') === 'true';
+        if (isDark) {
+            document.body.classList.add('dark-mode');
         }
-    });
+    }
 </script>
