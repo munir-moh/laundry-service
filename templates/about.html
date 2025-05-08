@@ -2,14 +2,18 @@
 <html>
 <head>
     <title>About Us</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: white;
-            color: #333;
+            background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+            color: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .container {
@@ -46,21 +50,11 @@
             margin-bottom: 20px;
         }
 
-        @media (max-width: 600px) {
-            .heading h2 {
-                font-size: 22px;
-            }
-
-            .heading p {
-                font-size: 15px;
-            }
-        }
-
-        /* Vision and Mission Section */
         .vision-mission-section {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
             gap: 30px;
+            justify-content: center;
             max-width: 900px;
             margin: 50px auto 30px;
             padding: 20px;
@@ -73,6 +67,8 @@
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             transition: transform 0.4s ease, opacity 0.4s ease;
+            flex: 1 1 300px;
+            max-width: 400px;
         }
 
         .vm-box.fade-in {
@@ -86,7 +82,6 @@
             margin-bottom: 15px;
         }
 
-        /* Working Process */
         .timeline-wrapper {
             background-color: #f5f5f5;
             padding: 30px 15px;
@@ -111,14 +106,7 @@
             opacity: 0;
             transform: translateY(30px);
             transition: all 0.6s ease-in-out;
-        }
-
-        .timeline-step.left .timeline-content {
-            margin-right: auto;
-        }
-
-        .timeline-step.right .timeline-content {
-            margin-left: auto;
+            flex-wrap: wrap;
         }
 
         .timeline-icon {
@@ -131,7 +119,7 @@
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            margin: 0 15px;
+            margin: 10px;
             flex-shrink: 0;
         }
 
@@ -143,17 +131,49 @@
             font-weight: 500;
             color: #333;
             max-width: 250px;
+            margin: 10px;
         }
 
         .timeline-step.visible {
             opacity: 1;
             transform: translateY(0);
         }
+
+        @media (max-width: 768px) {
+            .heading h2 {
+                font-size: 24px;
+            }
+
+            .heading p {
+                font-size: 15px;
+            }
+
+            .timeline-content {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .heading h2 {
+                font-size: 20px;
+            }
+
+            .heading p {
+                font-size: 14px;
+            }
+
+            .vm-box h3 {
+                font-size: 18px;
+            }
+
+            .timeline-step {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
-<!-- CHANGES ONLY: Wrap body background and update style for consistency -->
-<body style="margin: 0; font-family: Arial, sans-serif; background: linear-gradient(to right, #e3f2fd, #ffffff); color: #2c3e50;">
-    
+<body>
+
     {% include 'navbar.html' %}
 
     <div class="container">
@@ -184,19 +204,35 @@
             <p>
                 Thank you for choosing CleanSpark Laundry. We look forward to serving you and making your laundry experience as seamless as possible.
             </p>
-            
+
             <!-- Working Process -->
             <section style="background-color: #f2f2f2; padding: 50px 20px;">
                 <h2 style="text-align: center; color: #2c3e50;">Our Working Process</h2>
                 <div class="timeline-wrapper">
                     <div class="timeline-container" id="timelineContainer"></div>
-                </div>                  
+                </div>
             </section>
         </div>
     </div>
 
+    <!-- Vision and Mission Section -->
+    <div class="vision-mission-section">
+        <div class="vm-box fade-in-on-scroll">
+            <i class="fas fa-eye vm-icon"></i>
+            <h3>Our Vision</h3>
+            <p>To be the most trusted and innovative laundry service provider...</p>
+        </div>
+
+        <div class="vm-box fade-in-on-scroll">
+            <i class="fas fa-bullseye vm-icon"></i>
+            <h3>Our Mission</h3>
+            <p>To deliver reliable, affordable, and high-quality laundry solutions...</p>
+        </div>
+    </div>
+
+    {% include 'footer.html' %}
+
     <script>
-        // Timeline steps
         const steps = [
             { icon: 'fas fa-concierge-bell', text: '1. Select Service' },
             { icon: 'fas fa-calendar-alt', text: '2. Set Schedule' },
@@ -219,10 +255,9 @@
             container.appendChild(stepDiv);
         });
 
-        // Scroll-based animation
         function handleScrollAnimation() {
-            const timelineSteps = document.querySelectorAll('.timeline-step');
-            timelineSteps.forEach(step => {
+            const steps = document.querySelectorAll('.timeline-step');
+            steps.forEach(step => {
                 const rect = step.getBoundingClientRect();
                 if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
                     step.classList.add('visible');
@@ -231,8 +266,8 @@
                 }
             });
 
-            const vmBoxes = document.querySelectorAll('.fade-in-on-scroll');
-            vmBoxes.forEach(box => {
+            const boxes = document.querySelectorAll('.fade-in-on-scroll');
+            boxes.forEach(box => {
                 const rect = box.getBoundingClientRect();
                 if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
                     box.classList.add('fade-in');
@@ -245,25 +280,6 @@
         window.addEventListener('scroll', handleScrollAnimation);
         window.addEventListener('load', handleScrollAnimation);
     </script>
-            <!-- Vision and Mission Section -->
-            <div class="vision-mission-section">
-                <div class="vm-box fade-in-on-scroll">
-                    <i class="fas fa-eye vm-icon"></i>
-                    <h3>Our Vision</h3>
-                    <p>
-                        To be the most trusted and innovative laundry service provider, setting the standard for quality, convenience, and customer satisfaction across Nigeria.
-                    </p>
-                </div>
 
-                <div class="vm-box fade-in-on-scroll">
-                    <i class="fas fa-bullseye vm-icon"></i>
-                    <h3>Our Mission</h3>
-                    <p>
-                        To deliver reliable, affordable, and high-quality laundry solutions that save time and enhance lives, while maintaining eco-friendly practices and building lasting relationships with our customers.
-                    </p>
-                </div>
-            </div>
-            {% include 'footer.html' %}
-            
 </body>
 </html>

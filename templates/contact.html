@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Contact Us</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Add responsiveness -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
@@ -9,8 +10,11 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
+            background: linear-gradient(to right, #e0f7fa, #f1f8e9);
             color: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .contact-section {
@@ -31,11 +35,17 @@
             display: flex;
             align-items: center;
             margin: 10px 0;
+            flex-wrap: wrap;
         }
 
         .info-line box-icon {
             margin-right: 10px;
             min-width: 24px;
+        }
+
+        .info-line strong {
+            flex: 1;
+            word-break: break-word;
         }
 
         h2, h3 {
@@ -51,10 +61,17 @@
             margin-bottom: 20px;
         }
 
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
         .social-icons a {
-            display: inline-block;
-            margin: 10px 20px;
-            font-size: 18px;
+            display: inline-flex;
+            align-items: center;
+            margin: 10px 15px;
+            font-size: 16px;
             color: #2c3e50;
             text-decoration: none;
             transition: color 0.3s;
@@ -70,13 +87,35 @@
         }
 
         @media (max-width: 600px) {
+            .contact-section {
+                padding: 20px 10px;
+            }
+
+            .office-block {
+                padding: 15px;
+            }
+
             .info-line {
                 flex-direction: row;
                 align-items: flex-start;
             }
 
-            .info-line strong {
-                word-break: break-word;
+            h2 {
+                font-size: 22px;
+                text-align: center;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            .social-icons a {
+                font-size: 14px;
+                margin: 8px 10px;
+            }
+
+            .social-icons i {
+                font-size: 18px;
             }
         }
     </style>

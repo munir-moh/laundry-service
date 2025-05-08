@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Confirm Order</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Enable responsive scaling -->
     <style>
         body {
             margin: 0;
@@ -27,7 +28,7 @@
             padding: 30px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             border-radius: 10px;
-            width: 90%;
+            width: 100%;
             max-width: 600px;
             text-align: center;
         }
@@ -88,6 +89,31 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        /* Responsive tweaks */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .countdown {
+                font-size: 16px;
+            }
+
+            button {
+                width: 100%;
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .cancel-section {
+                margin-top: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -143,7 +169,7 @@
     <script>
         setTimeout(function () {
             window.location.href = "{{ url_for('order') }}";
-        } , 2000);
+        }, 2000);
     </script>
     {% endif %}
 

@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Admin Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Mobile scaling -->
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -9,6 +10,7 @@
             margin: 0;
             font-family: Arial, sans-serif;
             background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+            color: #2c3e50;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -19,6 +21,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
             animation: fadeIn 1s ease-in-out;
         }
 
@@ -84,6 +87,29 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 20px;
+            }
+
+            .login-box h2 {
+                font-size: 20px;
+            }
+
+            .input-container {
+                padding: 8px;
+            }
+
+            .login-box input[type="password"] {
+                font-size: 14px;
+            }
+
+            .login-box button {
+                font-size: 15px;
+            }
         }
     </style>
 </head>

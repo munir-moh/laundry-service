@@ -2,14 +2,18 @@
 <html>
 <head>
     <title>Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensures responsiveness -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+            background: linear-gradient(to right, #e0f7fa, #f1f8e9);
             color: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         h2, h3 {
@@ -23,7 +27,7 @@
             border-collapse: collapse;
             background-color: #ffffff;
             border-radius: 8px;
-            overflow: hidden;
+            overflow-x: auto;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
@@ -31,6 +35,7 @@
             padding: 12px;
             text-align: center;
             border: 1px solid #ddd;
+            font-size: 14px;
         }
 
         th {
@@ -66,40 +71,104 @@
             color: red;
             font-weight: bold;
         }
+
+        .logout-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .logout-container button {
+            padding: 12px 30px;
+            background-color: #e74c3c;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-container button:hover {
+            background-color: #c0392b;
+        }
+
+        /* Responsive Table */
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            thead {
+                display: none;
+            }
+
+            tr {
+                margin-bottom: 20px;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                padding: 10px;
+                background-color: #fff;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            }
+
+            td {
+                text-align: left;
+                padding: 10px 10px 5px;
+                position: relative;
+                font-size: 14px;
+            }
+
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                font-weight: bold;
+                color: #2c3e50;
+            }
+
+            td:last-child {
+                padding-bottom: 10px;
+            }
+        }
     </style>
 </head>
-<body style="margin: 0; font-family: Arial, sans-serif; background: linear-gradient(to right, #e3f2fd, #ffffff); color: #2c3e50;">
+<body>
 
     <h2>Admin Dashboard</h2>
 
     {% if orders %}
         <h3>Submitted Orders</h3>
         <table>
-            <tr>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>Service</th>
-                <th>Pickup Date</th>
-                <th>Notes</th>
-                <th>Order Date</th>
-                <th>Sorted</th>
-                <th>Action</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Service</th>
+                    <th>Pickup Date</th>
+                    <th>Notes</th>
+                    <th>Order Date</th>
+                    <th>Sorted</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
             {% for order in orders %}
             <tr>
-                <td>{{ order.name }}</td>
-                <td>{{ order.phone }}</td>
-                <td>{{ order.email }}</td>
-                <td>{{ order.address }}</td>
-                <td>{{ order.service }}</td>
-                <td>{{ order.pickup_date }}</td>
-                <td>{{ order.notes }}</td>
-                <td>{{ order.order_date }}</td>
+                <td data-label="Name">{{ order.name }}</td>
+                <td data-label="Phone">{{ order.phone }}</td>
+                <td data-label="Email">{{ order.email }}</td>
+                <td data-label="Address">{{ order.address }}</td>
+                <td data-label="Service">{{ order.service }}</td>
+                <td data-label="Pickup Date">{{ order.pickup_date }}</td>
+                <td data-label="Notes">{{ order.notes }}</td>
+                <td data-label="Order Date">{{ order.order_date }}</td>
 
                 <!-- Sorted Status -->
-                <td class="{% if order.cancelled %}unsorted{% elif order.sorted_status == 'Yes' %}sorted{% else %}unsorted{% endif %}">
+                <td data-label="Sorted" class="{% if order.cancelled %}unsorted{% elif order.sorted_status == 'Yes' %}sorted{% else %}unsorted{% endif %}">
                     {% if order.cancelled %}
                         <span style="color: red; font-weight: bold;">Cancelled</span>
                     {% else %}
@@ -108,7 +177,7 @@
                 </td>
 
                 <!-- Action Column -->
-                <td>
+                <td data-label="Action">
                     {% if order.cancelled %}
                         <span style="color: red;">N/A</span>
                     {% elif order.sorted_status != 'Yes' %}
@@ -122,30 +191,19 @@
                 </td>
             </tr>
             {% endfor %}
-        </table>                
+            </tbody>
+        </table>
     {% else %}
         <p style="text-align: center;">No orders submitted yet.</p>
     {% endif %}
 
-    <div style="text-align: center; margin-top: 30px;">
+    <div class="logout-container">
         <form action="{{ url_for('admin_logout') }}" method="get">
-            <button type="submit" style="
-                padding: 12px 30px;
-                background-color: #e74c3c;
-                color: white;
-                font-size: 16px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                transition: background-color 0.3s ease;
-            ">
-                Logout
-            </button>
+            <button type="submit">Logout</button>
         </form>
-    </div>    
+    </div>
 
     {% include 'footer.html' %}
-
+    
 </body>
 </html>

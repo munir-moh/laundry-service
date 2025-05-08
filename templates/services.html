@@ -1,28 +1,34 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Our Services</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Mobile responsiveness -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #f2f2f2, #e0e0e0);
+            background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+            color: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         h2 {
             text-align: center;
             color: #2c3e50;
             margin-top: 30px;
+            font-size: 2em;
         }
 
         .services-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
-            padding: 40px;
+            padding: 40px 20px;
             max-width: 1200px;
             margin: auto;
         }
@@ -55,10 +61,66 @@
             transform: rotate(360deg);
         }
 
+        .service-card h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .service-card p {
+            font-size: 0.95em;
+            color: #555;
+        }
+
         @keyframes fadeInUp {
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .service-card {
+                padding: 15px;
+            }
+
+            .service-card i {
+                font-size: 30px;
+            }
+
+            .service-card h3 {
+                font-size: 1.1em;
+            }
+
+            .service-card p {
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .services-container {
+                padding: 20px 10px;
+                gap: 15px;
+            }
+
+            .service-card {
+                padding: 12px;
+            }
+
+            .service-card i {
+                font-size: 28px;
+            }
+
+            .service-card h3 {
+                font-size: 1em;
+            }
+
+            .service-card p {
+                font-size: 0.85em;
             }
         }
     </style>
