@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Admin Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensures responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -21,45 +21,29 @@
             margin-top: 20px;
         }
 
-        table {
-            width: 95%;
-            margin: 30px auto;
-            border-collapse: collapse;
+        .card {
+            width: 90%;
+            margin: 15px auto;
+            padding: 20px;
             background-color: #ffffff;
-            border-radius: 8px;
-            overflow-x: auto;
+            border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            animation: fadeIn 0.5s ease-in;
         }
 
-        th, td {
-            padding: 12px;
-            text-align: center;
-            border: 1px solid #ddd;
-            font-size: 14px;
+        .card p {
+            margin: 8px 0;
+            font-size: 15px;
         }
 
-        th {
-            background-color: #2c3e50;
-            color: white;
+        .card i {
+            width: 20px;
+            margin-right: 10px;
+            color: #3498db;
         }
 
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        button {
-            padding: 8px 14px;
-            background-color: #3498db;
-            border: none;
-            border-radius: 5px;
-            color: white;
+        .label {
             font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #2980b9;
         }
 
         .sorted {
@@ -72,9 +56,31 @@
             font-weight: bold;
         }
 
+        .cancelled {
+            color: crimson;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 18px;
+            background-color: #3498db;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
         .logout-container {
             text-align: center;
-            margin-top: 30px;
+            margin: 30px 0;
         }
 
         .logout-container button {
@@ -86,51 +92,15 @@
             border-radius: 5px;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: background-color 0.3s ease;
         }
 
         .logout-container button:hover {
             background-color: #c0392b;
         }
 
-        /* Responsive Table */
-        @media (max-width: 768px) {
-            table, thead, tbody, th, td, tr {
-                display: block;
-            }
-
-            thead {
-                display: none;
-            }
-
-            tr {
-                margin-bottom: 20px;
-                border: 1px solid #ccc;
-                border-radius: 8px;
-                padding: 10px;
-                background-color: #fff;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            }
-
-            td {
-                text-align: left;
-                padding: 10px 10px 5px;
-                position: relative;
-                font-size: 14px;
-            }
-
-            td::before {
-                content: attr(data-label);
-                position: absolute;
-                top: 10px;
-                left: 10px;
-                font-weight: bold;
-                color: #2c3e50;
-            }
-
-            td:last-child {
-                padding-bottom: 10px;
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -140,70 +110,44 @@
 
     {% if orders %}
         <h3>Submitted Orders</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Address</th>
-                    <th>Service</th>
-                    <th>Pickup Date</th>
-                    <th>Notes</th>
-                    <th>Order Date</th>
-                    <th>Sorted</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for order in orders %}
-            <tr>
-                <td data-label="Name">{{ order.name }}</td>
-                <td data-label="Phone">{{ order.phone }}</td>
-                <td data-label="Email">{{ order.email }}</td>
-                <td data-label="Address">{{ order.address }}</td>
-                <td data-label="Service">{{ order.service }}</td>
-                <td data-label="Pickup Date">{{ order.pickup_date }}</td>
-                <td data-label="Notes">{{ order.notes }}</td>
-                <td data-label="Order Date">{{ order.order_date }}</td>
+        {% for order in orders %}
+        <div class="card">
+            <p><i class="fa fa-user"></i><span class="label">Name:</span> {{ order.name }}</p>
+            <p><i class="fa fa-phone"></i><span class="label">Phone:</span> {{ order.phone }}</p>
+            <p><i class="fa fa-envelope"></i><span class="label">Email:</span> {{ order.email }}</p>
+            <p><i class="fa fa-map-marker-alt"></i><span class="label">Address:</span> {{ order.address }}</p>
+            <p><i class="fa fa-tags"></i><span class="label">Service:</span> {{ order.service }}</p>
+            <p><i class="fa fa-calendar-alt"></i><span class="label">Pickup Date:</span> {{ order.pickup_date }}</p>
+            <p><i class="fa fa-sticky-note"></i><span class="label">Notes:</span> {{ order.notes }}</p>
+            <p><i class="fa fa-clock"></i><span class="label">Order Date:</span> {{ order.order_date }}</p>
 
-                <!-- Sorted Status -->
-                <td data-label="Sorted" class="{% if order.cancelled %}unsorted{% elif order.sorted_status == 'Yes' %}sorted{% else %}unsorted{% endif %}">
-                    {% if order.cancelled %}
-                        <span style="color: red; font-weight: bold;">Cancelled</span>
-                    {% else %}
-                        {{ order.sorted_status }}
-                    {% endif %}
-                </td>
-
-                <!-- Action Column -->
-                <td data-label="Action">
-                    {% if order.cancelled %}
-                        <span style="color: red;">N/A</span>
-                    {% elif order.sorted_status != 'Yes' %}
-                        <form method="POST" action="{{ url_for('admin_dashboard') }}">
-                            <input type="hidden" name="order_id" value="{{ order.id }}">
-                            <button type="submit">Mark as Sorted</button>
-                        </form>
-                    {% else %}
-                        <span>✓</span>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+            <!-- Sorted or Cancelled Status -->
+            {% if order.cancelled %}
+                <p><i class="fa fa-ban"></i><span class="label">Status:</span> <span class="cancelled">Cancelled</span></p>
+                <p><i class="fa fa-circle-xmark"></i><span class="label">Action:</span> <span class="cancelled">N/A</span></p>
+            {% elif order.sorted_status == 'Yes' %}
+                <p><i class="fa fa-check"></i><span class="label">Status:</span> <span class="sorted">Sorted</span></p>
+                <p><i class="fa fa-check-circle"></i><span class="label">Action:</span> <span>✓</span></p>
+            {% else %}
+                <p><i class="fa fa-times"></i><span class="label">Status:</span> <span class="unsorted">Unsorted</span></p>
+                <form method="POST" action="{{ url_for('admin_dashboard') }}">
+                    <input type="hidden" name="order_id" value="{{ order.id }}">
+                    <button type="submit"><i class="fa fa-check"></i> Mark as Sorted</button>
+                </form>
+            {% endif %}
+        </div>
+        {% endfor %}
     {% else %}
         <p style="text-align: center;">No orders submitted yet.</p>
     {% endif %}
 
     <div class="logout-container">
         <form action="{{ url_for('admin_logout') }}" method="get">
-            <button type="submit">Logout</button>
+            <button type="submit"><i class="fa fa-sign-out-alt"></i> Logout</button>
         </form>
     </div>
 
     {% include 'footer.html' %}
-    
+
 </body>
 </html>
