@@ -133,7 +133,7 @@
     <h2>Admin Dashboard</h2>
 
     <div class="filter-container">
-        <input type="text" id="orderFilter" placeholder="Search by name, phone, or service...">
+        <input type="text" id="orderFilter" placeholder="Search by name, phone, service, date, or status...">
     </div>
 
     {% if orders %}
@@ -176,7 +176,13 @@
 
             cards.forEach(card => {
                 const text = card.innerText.toLowerCase();
-                card.style.display = text.includes(filter) ? 'block' : 'none';
+                const match = (
+                    text.includes(filter) || 
+                    (filter === "sorted" && text.includes("status: sorted")) ||
+                    (filter === "unsorted" && text.includes("status: unsorted")) ||
+                    (filter === "cancelled" && text.includes("status: cancelled"))
+                );
+                card.style.display = match ? 'block' : 'none';
             });
         });
     </script>
