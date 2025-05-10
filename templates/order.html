@@ -106,6 +106,10 @@
 
     {% include 'navbar.html' %} 
 
+    {% if session.get('user_name') %}
+    <p style="font-weight: bold;">Hi, {{ session['user_name'] }} 👋</p>
+    {% endif %}
+    
     <div class="order-container">
         <form method="POST">
             {% with messages = get_flashed_messages() %}

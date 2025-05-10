@@ -68,6 +68,7 @@
 
     .sidebar a:hover {
         background-color: #e0f7fa;
+        color: #2c3e50;
     }
     
     .close-btn {
@@ -126,12 +127,19 @@
 
 <div id="mySidebar" class="sidebar">
     <div class="close-btn" onclick="closeSidebar()">&times;</div>
-    <a href="/">Home</a>
-    <a href="/services">Services</a>
-    <a href="/order">Place Order</a>
-    <a href="/about">About</a>
-    <a href="/admin">Admin</a>
-    <a href="/contact">Contact</a>
+    <a href="/"><i class="fas fa-home"></i> Home</a>
+    <a href="/services"><i class="fas fa-concierge-bell"></i> Services</a>
+    <a href="/order"><i class="fas fa-cart-plus"></i> Place Order</a>
+    <a href="/about"><i class="fas fa-info-circle"></i> About</a>
+    <a href="/admin"><i class="fas fa-user-shield"></i> Admin</a>
+    <a href="/contact"><i class="fas fa-envelope"></i> Contact</a>
+
+    {% if session.get('user_name') %}
+        <a href="/my-orders"><i class="fas fa-list"></i> My Orders</a>
+        <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    {% else %}
+        <a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+    {% endif %}
 </div>
 
 <script>

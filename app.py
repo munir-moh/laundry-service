@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session 
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key'
@@ -11,8 +12,16 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    orders = db.relationship('Order', backref='user', lazy=True)
+
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     name = db.Column(db.String(100))
     phone = db.Column(db.String(20))
     email = db.Column(db.String(100))
@@ -43,18 +52,61 @@ def about():
 def contact():
     return render_template('contact.html')
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+        hashed_pw = generate_password_hash(password)
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            flash('Email already registered.', 'error')
+        else:
+            user = User(name=name, email=email, password=hashed_pw)
+            db.session.add(user)
+            db.session.commit()
+            flash('Registration successful. Please log in.', 'success')
+            return redirect(url_for('login'))
+    return render_template('register.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = User.query.filter_by(email=email).first()
+        if user and check_password_hash(user.password, password):
+            session['user_id'] = user.id
+            session['user_name'] = user.name
+            flash('Logged in successfully.', 'success')
+            return redirect(url_for('order'))
+        else:
+            flash('Invalid credentials.', 'error')
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    session.pop('user_name', None)
+    flash('Logged out successfully.', 'info')
+    return redirect(url_for('dashboard'))
+
 @app.route('/order', methods=['GET', 'POST'])
 def order():
+    if 'user_id' not in session:
+        flash('Please log in to place an order.', 'warning')
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
-        # Temporarily store the order in session
         session['pending_order'] = {
-            'name': request.form.get('name'),
-            'phone': request.form.get('phone'),
-            'email': request.form.get('email'),
-            'address': request.form.get('address'),
-            'service': request.form.get('service'),
-            'pickup_date': request.form.get('pickup_date'),
-            'notes': request.form.get('notes'),
+            'name': request.form['name'],
+            'phone': request.form['phone'],
+            'email': request.form['email'],
+            'address': request.form['address'],
+            'service': request.form['service'],
+            'pickup_date': request.form['pickup_date'],
+            'notes': request.form['notes'],
             'order_date': datetime.now().strftime("%A, %d %B %Y"),
             'created_at': datetime.now().timestamp()
         }
@@ -63,43 +115,56 @@ def order():
 
 @app.route('/finalize-order', methods=['POST'])
 def finalize_order():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
     pending = session.pop('pending_order', None)
-    if pending:
-        if datetime.now().timestamp() - pending['created_at'] <= 60:
-            new_order = Order(
-                name=pending['name'],
-                phone=pending['phone'],
-                email=pending['email'],
-                address=pending['address'],
-                service=pending['service'],
-                pickup_date=pending['pickup_date'],
-                notes=pending['notes'],
-                order_date=pending['order_date'],
-                sorted_status="No"
-            )
-            db.session.add(new_order)
-            db.session.commit()
-            flash('Order placed successfully!', 'success')
-        else:
-            flash("Time expired! Order was not placed.", 'error')
+    if pending and datetime.now().timestamp() - pending['created_at'] <= 60:
+        order = Order(
+            user_id=session['user_id'],
+            name=pending['name'],
+            phone=pending['phone'],
+            email=pending['email'],
+            address=pending['address'],
+            service=pending['service'],
+            pickup_date=pending['pickup_date'],
+            notes=pending['notes'],
+            order_date=pending['order_date']
+        )
+        db.session.add(order)
+        db.session.commit()
+        flash('Order placed successfully.', 'success')
+    else:
+        flash('Order not finalized (expired or invalid).', 'error')
     return render_template('confirm_order.html', redirect=True)
 
 @app.route('/cancel-order', methods=['POST'])
 def cancel_order():
     session.pop('pending_order', None)
-    flash('Order was cancelled.', 'error')
+    flash('Order cancelled.', 'error')
     return render_template('confirm_order.html', redirect=True)
 
+@app.route('/my-orders')
+def my_orders():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    user = User.query.get(session['user_id'])
+    if not user:
+        flash('User not found.', 'error')
+        return redirect(url_for('login'))
+
+    orders = Order.query.filter_by(user_id=user.id).all()
+    return render_template('my_orders.html', orders=orders)
+
+# Admin section remains unchanged
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
-        password = request.form.get('password')
-        if password == 'munirmuhd12':
-            session.permanent = True
+        if request.form.get('password') == 'munirmuhd12':
             session['is_admin'] = True
             return redirect(url_for('admin_dashboard'))
-        else:
-            flash('Invalid password')
+        flash('Invalid admin password.', 'error')
     return render_template('admin_login.html')
 
 @app.route('/admin-dashboard', methods=['GET', 'POST'])
@@ -108,25 +173,12 @@ def admin_dashboard():
         return redirect(url_for('admin_login'))
 
     if request.method == 'POST':
-        order_id = request.form.get('order_id')
-        order = Order.query.get(order_id)
+        order = Order.query.get(request.form.get('order_id'))
         if order:
             order.sorted_status = "Yes"
             db.session.commit()
-        return redirect(url_for('admin_dashboard'))
-
     orders = Order.query.filter_by(cancelled=False).all()
     return render_template('admin_dashboard.html', orders=orders)
-
-@app.route('/mark-sorted/<int:order_id>')
-def mark_sorted(order_id):
-    if not session.get('is_admin'):
-        return redirect(url_for('admin_login'))
-    order = Order.query.get(order_id)
-    if order:
-        order.sorted_status = "Yes"
-        db.session.commit()
-    return redirect(url_for('admin_dashboard'))
 
 @app.route('/admin-logout')
 def admin_logout():

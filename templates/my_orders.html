@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Orders</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        .orders-container {
+            margin: 60px auto;
+            width: 90%;
+            max-width: 1000px;
+            animation: fadeUp 1s ease;
+        }
+        .order-card {
+            background: white;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px #ddd;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="page-bg">
+    {% include 'navbar.html' %}
+    <div class="orders-container">
+        <h2><i class="fas fa-box"></i> My Orders</h2>
+        {% for order in orders %}
+            <div class="order-card">
+                <p><strong>Service:</strong> {{ order.service }}</p>
+                <p><strong>Pickup Date:</strong> {{ order.pickup_date }}</p>
+                <p><strong>Address:</strong> {{ order.address }}</p>
+                <p><strong>Notes:</strong> {{ order.notes }}</p>
+                <p><strong>Status:</strong> {{ order.sorted_status }}</p>
+                <p><strong>Placed on:</strong> {{ order.order_date }}</p>
+            </div>
+        {% else %}
+            <p>You haven't placed any orders yet.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
