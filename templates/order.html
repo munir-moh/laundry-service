@@ -81,6 +81,12 @@
             margin-bottom: 20px;
         }
 
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 rgba(46, 204, 113, 0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 10px rgba(46, 204, 113, 0.4); }
+            100% { transform: scale(1); box-shadow: 0 0 0 rgba(46, 204, 113, 0.7); }
+        }
+
         @media (max-width: 600px) {
             form {
                 padding: 20px;
@@ -104,11 +110,19 @@
 </head>
 <body>
 
-    {% include 'navbar.html' %} 
-
     {% if session.get('user_name') %}
     <p style="font-weight: bold;">Hi, {{ session['user_name'] }} 👋</p>
     {% endif %}
+
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+        <a href="{{ url_for('logout') }}" style="text-decoration: none; background-color: #e74c3c; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <i class="fa fa-sign-out-alt"></i> Logout
+        </a>
+
+        <a href="{{ url_for('my_orders') }}" style="text-decoration: none; background-color: #2ecc71; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold; animation: pulse 1.5s infinite; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            My Orders
+        </a>
+    </div>
     
     <div class="order-container">
         <form method="POST">

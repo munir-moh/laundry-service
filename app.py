@@ -14,10 +14,10 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
+    name = db.Column(db.String(100), nullable=False)               # Add this
+    email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    orders = db.relationship('Order', backref='user', lazy=True)
+    registered_on = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -87,10 +87,9 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('user_id', None)
-    session.pop('user_name', None)
-    flash('Logged out successfully.', 'info')
-    return redirect(url_for('dashboard'))
+    session.clear()
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('login'))
 
 @app.route('/order', methods=['GET', 'POST'])
 def order():
@@ -179,6 +178,14 @@ def admin_dashboard():
             db.session.commit()
     orders = Order.query.filter_by(cancelled=False).all()
     return render_template('admin_dashboard.html', orders=orders)
+
+@app.route('/admin/registered_users')
+def view_users():
+    if not session.get('is_admin'):  # Adjust as per your logic
+        return redirect(url_for('login'))
+
+    users = User.query.all()
+    return render_template('admin_users.html', users=users)
 
 @app.route('/admin-logout')
 def admin_logout():

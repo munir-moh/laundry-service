@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>My Orders</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(to right, #2c3e50, #4ca1af);
+            background: linear-gradient(to right, #e0f7fa, #f1f8e9);
             font-family: 'Arial', sans-serif;
             color: #333;
         }
@@ -19,12 +20,37 @@
             width: 90%;
             max-width: 1000px;
             animation: fadeUp 1s ease;
+            box-sizing: border-box;
+        }
+
+        .back-button-container {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+        }
+
+        .back-button-container button {
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: white;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button-container button:hover {
+            background-color: #1a242f;
         }
 
         h2 {
             text-align: center;
-            color: white;
+            color: #2c3e50;
             margin-bottom: 30px;
+            font-size: 26px;
         }
 
         .order-card {
@@ -35,6 +61,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s;
             animation: cardZoomIn 0.6s ease;
+            box-sizing: border-box;
         }
 
         .order-card:hover {
@@ -44,6 +71,7 @@
         .order-card p {
             margin: 10px 0;
             font-size: 15px;
+            word-wrap: break-word;
         }
 
         .order-card p strong {
@@ -61,6 +89,11 @@
         }
 
         @media (max-width: 600px) {
+            .orders-container {
+                margin: 60px 15px;
+                width: 95%;
+            }
+
             .order-card {
                 padding: 18px 15px;
             }
@@ -76,7 +109,13 @@
     </style>
 </head>
 <body>
-    {% include 'navbar.html' %}
+
+    <div class="back-button-container">
+        <form action="{{ url_for('order') }}">
+            <button type="submit"><i class="fa fa-arrow-left"></i> Go Back</button>
+        </form>
+    </div>
+
     <div class="orders-container">
         <h2><i class="fas fa-box"></i> My Orders</h2>
         {% for order in orders %}
@@ -89,7 +128,7 @@
                 <p><strong><i class="fas fa-clock"></i> Placed on:</strong> {{ order.order_date }}</p>
             </div>
         {% else %}
-            <p style="text-align:center; color:white;">You haven't placed any orders yet.</p>
+            <p style="text-align:center; color:#2c3e50;">You haven't placed any orders yet.</p>
         {% endfor %}
     </div>
 </body>
