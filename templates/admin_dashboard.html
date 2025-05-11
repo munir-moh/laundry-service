@@ -147,16 +147,17 @@
 </head>
 <body>
 
-    <div class="logout-container">
-        <form action="{{ url_for('admin_logout') }}" method="get">
-            <button type="submit"><i class="fa fa-sign-out-alt"></i> Logout</button>
-        </form>
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px;">
+        <a href="{{ url_for('admin_logout') }}" style="background-color: #e74c3c; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold;">
+            <i class="fa fa-sign-out-alt"></i> Logout
+        </a>
+
+        <a href="{{ url_for('view_users') }}" style="background-color: #2c3e50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold;">
+            <i class="fa fa-users"></i> View Registered Users
+        </a>
     </div>
 
-    <div class="top-bar">
-        <h2>Admin Dashboard</h2>
-        <a href="/admin/registered_users" class="view-users-btn"><i class="fa fa-users"></i> View Registered Users</a>
-    </div>
+    <h2 style="margin: 0; text-align: center; ">Admin Dashboard</h2>
 
     <div class="filter-container">
         <input type="text" id="orderFilter" placeholder="Search by name, phone, service, date, or status...">
