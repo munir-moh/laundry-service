@@ -86,6 +86,41 @@ def login():
             return render_template('login.html')
     return render_template('login.html')
 
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form['email']
+        user = User.query.filter_by(email=email).first()
+        if user:
+            session['reset_email'] = email  # Store temporarily
+            return redirect(url_for('reset_password'))
+        else:
+            flash('Email not registered', 'error')
+            return redirect(url_for('forgot_password'))
+    return render_template('forgot_password.html')
+
+@app.route('/reset-password', methods=['GET', 'POST'])
+def reset_password():
+    if 'reset_email' not in session:
+        flash('Unauthorized access', 'error')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        if password != confirm_password:
+            flash('Passwords do not match', 'error')
+            return redirect(url_for('reset_password'))
+
+        user = User.query.filter_by(email=session['reset_email']).first()
+        if user:
+            user.password = generate_password_hash(password)
+            db.session.commit()
+            session.pop('reset_email', None)
+            flash('Password reset successful', 'success')
+            return redirect(url_for('login'))
+    return render_template('reset_password.html')
+
 @app.route('/logout')
 def logout():
     session.clear()
