@@ -163,17 +163,14 @@
                 timerDisplay.textContent = "Time's up!";
                 confirmBtn.disabled = true;
                 cancelBtn.disabled = true;
+
+                // Redirect to order page after 2 seconds
+                setTimeout(function () {
+                    window.location.href = "{{ url_for('order') }}";
+                }, 2000);
             }
         }, 1000);
     </script>
-
-    {% if redirect %}
-    <script>
-        setTimeout(function () {
-            window.location.href = "{{ url_for('order') }}";
-        }, 2000);
-    </script>
-    {% endif %}
 
     {% include 'footer.html' %}
 </body>
