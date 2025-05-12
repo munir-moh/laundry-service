@@ -62,12 +62,13 @@ def register():
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             flash('Email already registered.', 'error')
-        else:
-            user = User(name=name, email=email, password=hashed_pw)
-            db.session.add(user)
-            db.session.commit()
-            flash('Registration successful. Please log in.', 'success')
-            return redirect(url_for('login'))
+            return render_template('register.html')
+        
+        user = User(name=name, email=email, password=hashed_pw)
+        db.session.add(user)
+        db.session.commit()
+        flash('Registration successful. Please log in.', 'success')
+        return redirect(url_for('login'))
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -79,22 +80,20 @@ def login():
         if user and check_password_hash(user.password, password):
             session['user_id'] = user.id
             session['user_name'] = user.name
-            flash('Logged in successfully.', 'success')
             return redirect(url_for('order'))
         else:
-            flash('Invalid credentials.', 'error')
+            flash('Invalid email or password.', 'error')
+            return render_template('login.html')
     return render_template('login.html')
 
 @app.route('/logout')
 def logout():
     session.clear()
-    flash('You have been logged out.', 'info')
     return redirect(url_for('login'))
 
 @app.route('/order', methods=['GET', 'POST'])
 def order():
     if 'user_id' not in session:
-        flash('Please log in to place an order.', 'warning')
         return redirect(url_for('login'))
 
     if request.method == 'POST':
@@ -163,7 +162,9 @@ def admin_login():
         if request.form.get('password') == 'munirmuhd12':
             session['is_admin'] = True
             return redirect(url_for('admin_dashboard'))
-        flash('Invalid admin password.', 'error')
+        else:
+            flash('Invalid admin password.', 'error')
+        return render_template('admin_login.html')
     return render_template('admin_login.html')
 
 @app.route('/admin-dashboard', methods=['GET', 'POST'])

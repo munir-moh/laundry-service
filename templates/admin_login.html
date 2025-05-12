@@ -79,6 +79,20 @@
             background-color: #1a242f;
         }
 
+        .flash {
+            color: #e74c3c; /* Red color */
+            background-color: #fdecea;
+            border: 1px solid #e0b4b4;
+            padding: 12px 20px;
+            margin: 20px auto;
+            width: fit-content;
+            max-width: 90%;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
         .error {
             color: red;
             margin-top: 10px;
@@ -125,16 +139,21 @@
                     <i class="fas fa-lock lock-icon"></i>
                     <input type="password" name="password" placeholder="Enter Admin Password" required>
                 </div>
-                <button type="submit">Login</button>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="flash">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                <button type="submit"><i class="fas fa-sign-in-alt"></i> Login</button>
             </form>
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <p class="error">{{ messages[0] }}</p>
-                {% endif %}
-            {% endwith %}
         </div>
     </div>
 
     {% include 'footer.html' %}
+
 </body>
 </html>
