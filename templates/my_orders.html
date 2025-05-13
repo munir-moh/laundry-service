@@ -1,3 +1,4 @@
+<!-- Replace your existing my_orders.html content with this -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -78,6 +79,18 @@
             color: #2c3e50;
         }
 
+        .status-label {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            display: inline-block;
+        }
+
+        .pending { background-color: #fff3cd; color: #856404; }
+        .in-progress { background-color: #d1ecf1; color: #0c5460; }
+        .completed { background-color: #d4edda; color: #155724; }
+
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
@@ -124,7 +137,21 @@
                 <p><strong><i class="fas fa-calendar-alt"></i> Pickup Date:</strong> {{ order.pickup_date }}</p>
                 <p><strong><i class="fas fa-map-marker-alt"></i> Address:</strong> {{ order.address }}</p>
                 <p><strong><i class="fas fa-sticky-note"></i> Notes:</strong> {{ order.notes }}</p>
-                <p><strong><i class="fas fa-tasks"></i> Status:</strong> {{ order.sorted_status }}</p>
+                <p><strong><i class="fas fa-tasks"></i> Status:</strong>
+                    {% if order.status == 'Acknowledged' %}
+                        <span class="status-label acknowledged">Acknowledged</span>
+                    {% elif order.status == 'Picked' %}
+                        <span class="status-label picked">Picked</span>
+                    {% elif order.status == 'In Progress' %}
+                        <span class="status-label in-progress">In Progress</span>
+                    {% elif order.status == 'Finished' %}
+                        <span class="status-label finished">Finished</span>
+                    {% elif order.status == 'Delivered' %}
+                        <span class="status-label delivered">Delivered</span>
+                    {% else %}
+                        {{ order.status }}
+                    {% endif %}
+                </p>
                 <p><strong><i class="fas fa-clock"></i> Placed on:</strong> {{ order.order_date }}</p>
             </div>
         {% else %}

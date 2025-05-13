@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Confirm Order</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Enable responsive scaling -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             margin: 0;
@@ -63,7 +63,7 @@
         }
 
         button:disabled {
-            background-color: #aaa;
+            background-color: #aaa !important;
             cursor: not-allowed;
         }
 
@@ -89,89 +89,87 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
-        /* Responsive tweaks */
-        @media (max-width: 480px) {
-            .container {
-                padding: 20px;
-            }
-
-            h2 {
-                font-size: 20px;
-            }
-
-            .countdown {
-                font-size: 16px;
-            }
-
-            button {
-                width: 100%;
-                font-size: 14px;
-                padding: 10px;
-            }
-
-            .cancel-section {
-                margin-top: 15px;
-            }
-        }
     </style>
 </head>
 <body>
 
-    <div class="wrapper">
-        <div class="container">
+<div class="wrapper">
+    <div class="container">
 
-            {% if redirect %}
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        <div class="flash">
-                            {% for message in messages %}
-                                {{ message }}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                {% endwith %}
-            {% endif %}
+        <div id="flash-container"></div>
 
-            <h2>Confirm Your Order</h2>
-            <p>You have <span class="countdown" id="timer">60</span> seconds to confirm or cancel.</p>
+        <h2>Confirm Your Order</h2>
+        <p>You have <span class="countdown" id="timer">60</span> seconds to confirm or cancel.</p>
 
-            <form method="POST" action="{{ url_for('finalize_order') }}">
-                <button type="submit" id="confirmBtn">Confirm Order</button>
+        <form id="confirmForm">
+            <button type="submit" id="confirmBtn">Confirm Order</button>
+        </form>
+
+        <div class="cancel-section">
+            <form id="cancelForm">
+                <button type="submit" id="cancelBtn">Cancel Order</button>
             </form>
-
-            <div class="cancel-section">
-                <form method="POST" action="{{ url_for('cancel_order') }}">
-                    <button type="submit" id="cancelBtn">Cancel Order</button>
-                </form>
-            </div>
         </div>
     </div>
+</div>
 
-    <script>
-        let timeLeft = 60;
-        const timerDisplay = document.getElementById("timer");
-        const confirmBtn = document.getElementById("confirmBtn");
-        const cancelBtn = document.getElementById("cancelBtn");
+<script>
+    let timeLeft = 60;
+    const timerDisplay = document.getElementById("timer");
+    const confirmBtn = document.getElementById("confirmBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
 
-        const countdown = setInterval(() => {
-            timeLeft--;
-            timerDisplay.textContent = timeLeft;
+    const countdown = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = timeLeft;
 
-            if (timeLeft <= 0) {
-                clearInterval(countdown);
-                timerDisplay.textContent = "Time's up!";
-                confirmBtn.disabled = true;
-                cancelBtn.disabled = true;
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            timerDisplay.textContent = "Time's up!";
+            confirmBtn.disabled = true;
+        }
+    }, 1000);
 
-                // Redirect to order page after 2 seconds
-                setTimeout(function () {
-                    window.location.href = "{{ url_for('order') }}";
-                }, 2000);
+    function showFlash(message, type) {
+        const flash = document.createElement("div");
+        flash.className = "flash";
+        flash.textContent = message;
+        document.getElementById("flash-container").appendChild(flash);
+    }
+
+    async function handleForm(formId, url, successMessage) {
+        const form = document.getElementById(formId);
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            confirmBtn.disabled = true;
+            cancelBtn.disabled = true;
+
+            const response = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            });
+
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const flash = doc.querySelector(".flash");
+            if (flash) {
+                showFlash(flash.textContent, "success");
+            } else {
+                showFlash(successMessage, "success");
             }
-        }, 1000);
-    </script>
 
-    {% include 'footer.html' %}
+            setTimeout(() => {
+                window.location.href = "{{ url_for('order') }}";
+            }, 3000);
+        });
+    }
+
+    handleForm("confirmForm", "{{ url_for('finalize_order') }}", "Order confirmed.");
+    handleForm("cancelForm", "{{ url_for('cancel_order') }}", "Order cancelled.");
+</script>
+
+{% include 'footer.html' %}
 </body>
 </html>

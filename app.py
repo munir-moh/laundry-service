@@ -32,6 +32,7 @@ class Order(db.Model):
     order_date = db.Column(db.String(100))
     sorted_status = db.Column(db.String(10), default="No")
     cancelled = db.Column(db.Boolean, default=False)
+    status = db.Column(db.String(50), default="Pending")
 
 with app.app_context():
     db.create_all()
@@ -169,13 +170,14 @@ def finalize_order():
         flash('Order placed successfully.', 'success')
     else:
         flash('Order not finalized (expired or invalid).', 'error')
-    return render_template('confirm_order.html', redirect=True)
+    return render_template('confirm_order.html')  # no redirect here
+
 
 @app.route('/cancel-order', methods=['POST'])
 def cancel_order():
     session.pop('pending_order', None)
     flash('Order cancelled.', 'error')
-    return render_template('confirm_order.html', redirect=True)
+    return render_template('confirm_order.html')  # no redirect here
 
 @app.route('/my-orders')
 def my_orders():
@@ -208,12 +210,32 @@ def admin_dashboard():
         return redirect(url_for('admin_login'))
 
     if request.method == 'POST':
-        order = Order.query.get(request.form.get('order_id'))
+        order_id = request.form.get('order_id')
+        new_status = request.form.get('status')
+        order = Order.query.get(order_id)
         if order:
-            order.sorted_status = "Yes"
+            order.status = new_status
             db.session.commit()
+            flash('Order status updated successfully.', 'success')
+
     orders = Order.query.filter_by(cancelled=False).all()
     return render_template('admin_dashboard.html', orders=orders)
+
+@app.route('/update-status/<int:order_id>', methods=['POST'])
+def update_status(order_id):
+    if not session.get('is_admin'):
+        return redirect(url_for('admin_login'))
+
+    new_status = request.form.get('status')
+    order = Order.query.get(order_id)
+
+    if order and new_status:
+        order.status = new_status
+        db.session.commit()
+    else:
+        flash('Failed to update status.', 'error')
+
+    return redirect(url_for('admin_dashboard'))
 
 @app.route('/admin/registered_users')
 def view_users():
