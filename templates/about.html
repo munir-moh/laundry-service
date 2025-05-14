@@ -126,6 +126,70 @@
             margin: 10px;
         }
 
+        .faq-section {
+            padding: 40px 20px;
+            background: transparent;
+            margin-bottom: 80px;
+        }
+
+        .faq-box {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 800px;
+            margin: auto;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .faq-box h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .faq-item {
+            margin-bottom: 15px;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 14px 20px;
+            background-color: #2c3e50;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s;
+        }
+
+        .faq-question:hover {
+            background-color: #1a242f;
+        }
+
+        .faq-answer {
+            display: none;
+            padding: 14px 20px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #2c3e50;
+            border-radius: 0 0 6px 6px;
+            margin-top: 5px;
+            font-size: 15px;
+            color: #333;
+        }
+
+        .faq-question .icon {
+            font-weight: bold;
+            font-size: 18px;
+            margin-left: 10px;
+        }
+
         @keyframes fadeSlideUp {
             0% {
                 opacity: 0;
@@ -220,6 +284,50 @@
             <p>To deliver reliable, affordable, and high-quality laundry solutions...</p>
         </div>
     </div>
+
+  <section class="faq-section">
+    <div class="faq-box">
+        <h2><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+            <button class="faq-question"><span class="icon">+</span> Do you offer pickup and delivery?</button>
+            <div class="faq-answer">Yes! We provide free pickup and delivery within supported areas. Simply place your order and we’ll handle the rest.</div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question"><span class="icon">+</span> What payment methods do you accept?</button>
+            <div class="faq-answer">We accept cash, bank transfer, and POS payments at pickup or delivery.</div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question"><span class="icon">+</span> How long does laundry take?</button>
+            <div class="faq-answer">Standard turnaround is 24–48 hours depending on the service type. Express options are available.</div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question"><span class="icon">+</span> Do you handle delicate or special fabrics?</button>
+            <div class="faq-answer">Absolutely. We have specialized processes for delicate fabrics, wedding dresses, and other sensitive items.</div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question"><span class="icon">+</span> How do I track my order?</button>
+            <div class="faq-answer">Log in to your account and visit the "My Orders" section to view your order status in real-time.</div>
+        </div>
+    </div>
+</section>
+
+<script>
+    const questions = document.querySelectorAll('.faq-question');
+    questions.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const answer = btn.nextElementSibling;
+            const icon = btn.querySelector('.icon');
+            const isVisible = answer.style.display === 'block';
+            answer.style.display = isVisible ? 'none' : 'block';
+            icon.textContent = isVisible ? '+' : '−';
+        });
+    });
+</script>
 
     {% include 'footer.html' %}
 
