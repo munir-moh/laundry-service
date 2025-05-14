@@ -81,28 +81,40 @@
     </style>
 </head>
 <body>
+
+    {% include 'navbar.html' %}
+
     <div class="container">
-        <h2><i class="fas fa-money-bill-wave"></i> Cleanspark Laundry Pricing</h2>
+        <h2>Cleanspark Laundry Pricing</h2>
         
         <table>
             <tr>
                 <th>Service</th>
                 <th>Price per Unit</th>
             </tr>
-            <tr><td>Washing & Folding</td><td>₦200 per cloth</td></tr>
-            <tr><td>Dry Cleaning</td><td>₦500 per cloth</td></tr>
-            <tr><td>Ironing</td><td>₦150 per cloth</td></tr>
-            <tr><td>Blanket Cleaning</td><td>₦1000 per blanket</td></tr>
+            <tr><td>Washing & Drying</td><td>₦700 per cloth</td></tr>
+            <tr><td>Ironing/Pressing</td><td>₦500 per cloth</td></tr>
+            <tr><td>Stain Removal</td><td>₦2000 per cloth</td></tr>
+            <tr><td>Express Laundry</td><td>₦3000 per cloth</td></tr>
+            <tr><td>Curtain and Bedding</td><td>₦2500 per curtain/bedding</td></tr>
+            <tr><td>Blanket Washing</td><td>₦5000 per blanket</td></tr>
+            <tr><td>Shoe Cleaning</td><td>₦500 per pair</td></tr>
+            <tr><td>Alteration and Repair</td><td>Free</td></tr>
+            <tr><td>Pickup</td><td>₦1500</td></tr>
+            <tr><td>Delivery</td><td>₦1500</td></tr>
         </table>
 
         <div class="estimate-section">
             <h3>Estimate Your Cost</h3>
             <label for="service">Select Service:</label>
             <select id="service">
-                <option value="wash">Washing & Folding - ₦200</option>
-                <option value="dry">Dry Cleaning - ₦500</option>
-                <option value="iron">Ironing - ₦150</option>
-                <option value="blanket">Blanket Cleaning - ₦1000</option>
+                <option value="wash">Washing & Drying - ₦700</option>
+                <option value="iron">Ironing/Pressing - ₦500</option>
+                <option value="stain">Stain Removal - ₦2000</option>
+                <option value="express">Express Laundry - ₦3000</option>
+                <option value="curtain">Curtain and bedding - ₦2500</option>
+                <option value="blanket">Blanket Washing - ₦5000</option>
+                <option value="shoe">Shoe Cleaning - ₦500</option>
             </select>
 
             <label for="quantity">Enter Quantity:</label>
@@ -116,10 +128,13 @@
 
     <script>
         const servicePrices = {
-            wash: 200,
-            dry: 500,
-            iron: 150,
-            blanket: 1000
+            wash: 700,
+            iron: 500,
+            stain: 2000,
+            express: 3000,
+            curtain: 2500,
+            blanket: 5000,
+            shoe: 500
         };
 
         const serviceSelect = document.getElementById('service');
@@ -136,5 +151,8 @@
         serviceSelect.addEventListener('change', updateEstimate);
         quantityInput.addEventListener('input', updateEstimate);
     </script>
+
+    {% include 'footer.html' %}
+    
 </body>
 </html>
