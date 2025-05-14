@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pricing - Cleanspark Laundry</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #f1f8e9, #e0f7fa);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 80px auto;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        .estimate-section {
+            background: #ffffff;
+            padding: 20px;
+            margin-top: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        .estimate-section label, .estimate-section select, .estimate-section input {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .estimate-result {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+        @media (max-width: 600px) {
+            th, td {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .estimate-section label, .estimate-section select, .estimate-section input {
+                font-size: 15px;
+            }
+
+            .estimate-result {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2><i class="fas fa-money-bill-wave"></i> Cleanspark Laundry Pricing</h2>
+        
+        <table>
+            <tr>
+                <th>Service</th>
+                <th>Price per Unit</th>
+            </tr>
+            <tr><td>Washing & Folding</td><td>₦200 per cloth</td></tr>
+            <tr><td>Dry Cleaning</td><td>₦500 per cloth</td></tr>
+            <tr><td>Ironing</td><td>₦150 per cloth</td></tr>
+            <tr><td>Blanket Cleaning</td><td>₦1000 per blanket</td></tr>
+        </table>
+
+        <div class="estimate-section">
+            <h3>Estimate Your Cost</h3>
+            <label for="service">Select Service:</label>
+            <select id="service">
+                <option value="wash">Washing & Folding - ₦200</option>
+                <option value="dry">Dry Cleaning - ₦500</option>
+                <option value="iron">Ironing - ₦150</option>
+                <option value="blanket">Blanket Cleaning - ₦1000</option>
+            </select>
+
+            <label for="quantity">Enter Quantity:</label>
+            <input type="number" id="quantity" min="1" value="1">
+
+            <div class="estimate-result">
+                Estimated Price: <span id="estimatedPrice">₦200</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const servicePrices = {
+            wash: 200,
+            dry: 500,
+            iron: 150,
+            blanket: 1000
+        };
+
+        const serviceSelect = document.getElementById('service');
+        const quantityInput = document.getElementById('quantity');
+        const estimatedPriceSpan = document.getElementById('estimatedPrice');
+
+        function updateEstimate() {
+            const service = serviceSelect.value;
+            const quantity = parseInt(quantityInput.value) || 0;
+            const price = servicePrices[service] * quantity;
+            estimatedPriceSpan.textContent = `₦${price}`;
+        }
+
+        serviceSelect.addEventListener('change', updateEstimate);
+        quantityInput.addEventListener('input', updateEstimate);
+    </script>
+</body>
+</html>
