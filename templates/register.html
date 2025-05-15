@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Register</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
@@ -15,8 +14,16 @@
             color: #333;
         }
 
+        .page-center-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
         .form-container {
-            max-width: 100%;
             width: 100%;
             max-width: 400px;
             margin: 100px auto;
@@ -27,6 +34,7 @@
             animation: fadeIn 1s ease;
             box-sizing: border-box;
         }
+
 
         .form-container h2 {
             text-align: center;
@@ -87,7 +95,7 @@
         }
 
         .flash {
-            color: #e74c3c; /* Red color */
+            color: #e74c3c; 
             background-color: #fdecea;
             border: 1px solid #e0b4b4;
             padding: 12px 20px;
@@ -118,35 +126,38 @@
     </style>
 </head>
 <body>
+
     {% include 'navbar.html' %}
 
-    <div class="form-container">
-        <h2><i class="fas fa-user-plus"></i> Register</h2>
-        <form method="POST">
-            <div class="form-group">
-                <i class="fas fa-user"></i>
-                <input type="text" name="name" placeholder="Full Name" required>
-            </div>
-            <div class="form-group">
-                <i class="fas fa-envelope"></i>
-                <input type="email" name="email" placeholder="Email" required>
-            </div>
-            <div class="form-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" name="password" placeholder="Password" required>
-            </div>
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <div class="flash">
-                        {% for message in messages %}
-                            {{ message }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
-            <button type="submit"><i class="fas fa-user-check"></i> Register</button>
-        </form>
-        <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+    <div class="page-center-wrapper">
+        <div class="form-container">
+            <h2><i class="fas fa-user-plus"></i> Register</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="name" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="flash">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                <button type="submit"><i class="fas fa-user-check"></i> Register</button>
+            </form>
+            <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        </div>
     </div>
 </body>
 </html>

@@ -14,10 +14,10 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)               # Add this
+    name = db.Column(db.String(100), nullable=False)               
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    registered_on = db.Column(db.DateTime, default=datetime.utcnow)
+    registered_on = db.Column(db.DateTime, default=datetime.astimezone(datetime.now()))
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -97,7 +97,7 @@ def forgot_password():
         email = request.form['email']
         user = User.query.filter_by(email=email).first()
         if user:
-            session['reset_email'] = email  # Store temporarily
+            session['reset_email'] = email  
             return redirect(url_for('reset_password'))
         else:
             flash('Email not registered', 'error')
@@ -174,14 +174,13 @@ def finalize_order():
         flash('Order placed successfully.', 'success')
     else:
         flash('Order not finalized (expired or invalid).', 'error')
-    return render_template('confirm_order.html')  # no redirect here
+    return render_template('confirm_order.html')  
 
 
 @app.route('/cancel-order', methods=['POST'])
 def cancel_order():
     session.pop('pending_order', None)
-    flash('Order cancelled.', 'error')
-    return render_template('confirm_order.html')  # no redirect here
+    return render_template('confirm_order.html')  
 
 @app.route('/my-orders')
 def my_orders():
@@ -196,11 +195,10 @@ def my_orders():
     orders = Order.query.filter_by(user_id=user.id).all()
     return render_template('my_orders.html', orders=orders)
 
-# Admin section remains unchanged
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
-        if request.form.get('password') == 'munirmuhd12':
+        if request.form.get('password') == 'cleanspark10':
             session['is_admin'] = True
             return redirect(url_for('admin_dashboard'))
         else:
@@ -243,7 +241,7 @@ def update_status(order_id):
 
 @app.route('/admin/registered_users')
 def view_users():
-    if not session.get('is_admin'):  # Adjust as per your logic
+    if not session.get('is_admin'):  
         return redirect(url_for('login'))
 
     users = User.query.all()
